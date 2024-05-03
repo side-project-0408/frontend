@@ -43,13 +43,19 @@ export default function RootLayout({
           <section className="flex flex-row items-center gap-14 h-20">
             <div>전화: 010-0000-0000</div>
             <div>주소: 서울시 서울구 서울로 1234-7</div>
-            <Link href="https://www.naver.com" target="_blank" prefetch={false}>
+            <Link
+              href="https://www.naver.com"
+              target="_blank"
+              prefetch={false}
+              className="underline"
+            >
               개인정보 처리방침
             </Link>
             <Link
               href="https://www.google.com"
               target="_blank"
               prefetch={false}
+              className="underline"
             >
               이용 약관
             </Link>
