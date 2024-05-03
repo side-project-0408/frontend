@@ -2,6 +2,11 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 
+import Image from "next/image";
+import Link from "next/link";
+
+import logo from "../../public/logo.png";
+
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -16,7 +21,42 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        <nav className="fixed flex flex-row items-center w-full px-80 py-3 bg-white border border-black">
+          <Link href="/">
+            <Image src={logo} alt="this is logo image" className="w-16"></Image>
+          </Link>
+          <div className="flex flex-row justify-between w-full">
+            <section className="flex gap-20 ml-24 border border-black">
+              <Link href={"project"}>Project</Link>
+              <Link href={"people"}>People</Link>
+            </section>
+            <section className="flex gap-2.5 border border-black">
+              <Link href={"logout"}>로그아웃</Link>
+              <Link href={"login"}>로그인</Link>
+              <Link href={"myinfo"}>마이페이지</Link>
+            </section>
+          </div>
+        </nav>
+        <div className="px-80 bg-white">{children}</div>
+        <footer className="flex flex-col items-center border border-black">
+          <section className="flex flex-row items-center gap-14 h-20">
+            <div>전화: 010-0000-0000</div>
+            <div>주소: 서울시 서울구 서울로 1234-7</div>
+            <Link href="https://www.naver.com" target="_blank" prefetch={false}>
+              개인정보 처리방침
+            </Link>
+            <Link
+              href="https://www.google.com"
+              target="_blank"
+              prefetch={false}
+            >
+              이용 약관
+            </Link>
+          </section>
+          <div>Copyright © 2024 Match Mate</div>
+        </footer>
+      </body>
     </html>
   );
 }
