@@ -22,12 +22,16 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <nav className="fixed flex flex-row items-center w-full px-80 py-3 bg-white border border-black">
+        <nav className="fixed flex h-[80px] w-full flex-row items-center border border-black bg-white px-[360px] py-3">
           <Link href="/">
-            <Image src={logo} alt="this is logo image" className="w-16"></Image>
+            <Image
+              src={logo}
+              alt="this is logo image"
+              className="w-[100px]"
+            ></Image>
           </Link>
-          <div className="flex flex-row justify-between w-full">
-            <section className="flex gap-20 ml-24 border border-black">
+          <div className="flex w-full flex-row justify-between">
+            <section className="ml-24 flex gap-20 border border-black text-[18px] font-medium text-[#363636]">
               <Link href={"project"}>Project</Link>
               <Link href={"people"}>People</Link>
             </section>
@@ -38,9 +42,9 @@ export default function RootLayout({
             </section>
           </div>
         </nav>
-        <div className="px-80 bg-white">{children}</div>
+        <div className="bg-white px-[360px]">{children}</div>
         <footer className="flex flex-col items-center border border-black">
-          <section className="flex flex-row items-center gap-14 h-20">
+          <section className="flex h-20 flex-row items-center gap-14">
             <div>전화: 010-0000-0000</div>
             <div>주소: 서울시 서울구 서울로 1234-7</div>
             <Link
