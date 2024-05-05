@@ -55,7 +55,7 @@ export default function ProjectBox({ project }: Props) {
   return (
     <Link
       href={`/project/${project.projectId}`}
-      className="hover: trans relative w-[288px] rounded-[16px] border border-black px-[20px] pb-[15px] transition-transform hover:-translate-y-1 hover:border-neutral-500"
+      className={`hover: trans relative w-[288px] rounded-[16px] border ${isRecent ? "border-[#FF800B]" : ""} px-[20px] pb-[15px] shadow-lg transition-transform hover:-translate-y-1`}
     >
       <Image
         src={newIcon}
