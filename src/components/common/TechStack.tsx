@@ -19,6 +19,7 @@ export default function TechStack({ techStack, showText }: Props) {
         width={35}
         height={35}
         alt="This is tech stack image"
+        style={{ width: "35px", height: "35px" }}
       />
       <div className={`text-[18px] ${showText ? "" : "hidden"}`}>
         {techStack.toUpperCase()}
