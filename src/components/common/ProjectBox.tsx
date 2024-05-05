@@ -60,7 +60,7 @@ export default function ProjectBox({ project }: Props) {
     >
       <Image
         src={newIcon}
-        alt="This is new icon"
+        alt="This is new project label icon"
         className={`absolute top-0 ${isRecent ? "" : "hidden"}`}
       />
       <div className={`${isRecent ? "mt-[78px]" : "mt-[36px]"} flex gap-[1px]`}>
