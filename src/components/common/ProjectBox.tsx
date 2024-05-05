@@ -1,6 +1,7 @@
 import Link from "next/link";
 import newIcon from "../../../public/newIcon.svg";
 import Image from "next/image";
+import TechStack from "./TechStack";
 
 type Props = {
   project: {
@@ -77,14 +78,9 @@ export default function ProjectBox({ project }: Props) {
       <div className="mt-[8px] text-[12px] font-medium text-[#666666]">
         {`마감일 | ${project.deadLine.replaceAll("-", ".")}`}
       </div>
-      <div className="mt-[16px] flex gap-[10px]">
-        {project.techStack.split(",").map((t, i) => (
-          <Image
-            src={newIcon}
-            key={`techStackImage${i}`}
-            className="h-[32px] w-[32px] overflow-hidden border border-black"
-            alt="This is tech stack image"
-          />
+      <div className="mt-[16px] flex gap-[10px] overflow-hidden">
+        {project.techStack.split(", ").map((t, i) => (
+          <TechStack key={`techStack${i}`} techStack={t} showText={false} />
         ))}
       </div>
       <hr className="mt-[27px]" />
