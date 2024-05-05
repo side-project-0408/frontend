@@ -2,6 +2,7 @@ import Link from "next/link";
 import newIcon from "../../../public/newIcon.svg";
 import Image from "next/image";
 import TechStack from "./TechStack";
+import BlueTextBox from "./BlueTextBox";
 
 type Props = {
   project: {
@@ -64,11 +65,11 @@ export default function ProjectBox({ project }: Props) {
       />
       <div className={`${isRecent ? "mt-[78px]" : "mt-[36px]"} flex gap-[1px]`}>
         {project.position.split(", ").map((p, i) => (
-          <div
-            key={`position${i}`}
-            className="rounded-xl bg-[#F2F4F8] px-[8px] py-0.5 text-[12px] font-bold text-[#3E86F5]"
-          >
-            {convertPositionEngToKor(p)}
+          <div key={`position${i}`}>
+            <BlueTextBox
+              textToShow={convertPositionEngToKor(p)}
+              textSize={"12px"}
+            />
           </div>
         ))}
       </div>
