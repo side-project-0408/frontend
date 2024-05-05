@@ -3,12 +3,14 @@ type Props = {
   textSize: string;
 };
 
+type FontSizeVariantsType = {
+  "12px": string;
+  "15px": string;
+  [key: string]: string;
+};
+
 export default function BlueTextBox({ textToShow, textSize }: Props) {
-  const fontSizeVariants: {
-    "12px": string;
-    "15px": string;
-    [key: string]: string;
-  } = {
+  const fontSizeVariants: FontSizeVariantsType = {
     "12px": "text-[12px]",
     "15px": "text-[15px]",
   };
