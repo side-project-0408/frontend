@@ -4,7 +4,7 @@ import Link from "next/link";
 import { faker } from "@faker-js/faker";
 
 export default function Home() {
-  const dummyHotProject = [
+  const DUMMY_HOT_PROJECT = [
     {
       projectId: faker.number.int(),
       nickname: faker.person.fullName(),
@@ -12,11 +12,11 @@ export default function Home() {
       title: faker.lorem.sentences(),
       techStack: "react, java, next, spring, express",
       position: "frontend, backend, designer, PM",
-      deadLine: `2024-${faker.number.int({ min: 1, max: 12 })}-${faker.number.int({ min: 1, max: 30 })}`,
+      deadLine: `2024-${faker.number.int({ min: 1, max: 12 }).toString().padStart(2, "0")}-${faker.number.int({ min: 1, max: 30 }).toString().padStart(2, "0")}`,
       viewCount: faker.number.int(),
       favoriteCount: faker.number.int(),
-      createdAt: faker.date.anytime(),
-      recent: faker.datatype.boolean(0.5),
+      createdAt: "2024-01-29T19:43:45.58666",
+      recent: false,
     },
     {
       projectId: faker.number.int(),
@@ -25,11 +25,11 @@ export default function Home() {
       title: faker.lorem.sentences(),
       techStack: "react, java, next, spring, express",
       position: "frontend, backend, designer, PM",
-      deadLine: `2024-${faker.number.int({ min: 1, max: 12 })}-${faker.number.int({ min: 1, max: 30 })}`,
+      deadLine: `2024-${faker.number.int({ min: 1, max: 12 }).toString().padStart(2, "0")}-${faker.number.int({ min: 1, max: 30 }).toString().padStart(2, "0")}`,
       viewCount: faker.number.int(),
       favoriteCount: faker.number.int(),
-      createdAt: faker.date.anytime(),
-      recent: faker.datatype.boolean(0.5),
+      createdAt: "2024-03-29T19:43:45.58666",
+      recent: true,
     },
     {
       projectId: faker.number.int(),
@@ -38,11 +38,11 @@ export default function Home() {
       title: faker.lorem.sentences(),
       techStack: "react, java, next, spring, express",
       position: "frontend, backend, designer, PM",
-      deadLine: `2024-${faker.number.int({ min: 1, max: 12 })}-${faker.number.int({ min: 1, max: 30 })}`,
+      deadLine: `2024-${faker.number.int({ min: 1, max: 12 }).toString().padStart(2, "0")}-${faker.number.int({ min: 1, max: 30 }).toString().padStart(2, "0")}`,
       viewCount: faker.number.int(),
       favoriteCount: faker.number.int(),
-      createdAt: faker.date.anytime(),
-      recent: faker.datatype.boolean(0.5),
+      createdAt: "2024-04-19T19:43:45.58666",
+      recent: true,
     },
     {
       projectId: faker.number.int(),
@@ -51,11 +51,11 @@ export default function Home() {
       title: faker.lorem.sentences(),
       techStack: "react, java, next, spring, express",
       position: "frontend, backend, designer, PM",
-      deadLine: `2024-${faker.number.int({ min: 1, max: 12 })}-${faker.number.int({ min: 1, max: 30 })}`,
+      deadLine: `2024-${faker.number.int({ min: 1, max: 12 }).toString().padStart(2, "0")}-${faker.number.int({ min: 1, max: 30 }).toString().padStart(2, "0")}`,
       viewCount: faker.number.int(),
       favoriteCount: faker.number.int(),
-      createdAt: faker.date.anytime(),
-      recent: faker.datatype.boolean(0.5),
+      createdAt: "2024-02-29T19:43:45.58666",
+      recent: false,
     },
     {
       projectId: faker.number.int(),
@@ -64,11 +64,11 @@ export default function Home() {
       title: faker.lorem.sentences(),
       techStack: "react, java, next, spring, express",
       position: "frontend, backend, designer, PM",
-      deadLine: `2024-${faker.number.int({ min: 1, max: 12 })}-${faker.number.int({ min: 1, max: 30 })}`,
+      deadLine: `2024-${faker.number.int({ min: 1, max: 12 }).toString().padStart(2, "0")}-${faker.number.int({ min: 1, max: 30 }).toString().padStart(2, "0")}`,
       viewCount: faker.number.int(),
       favoriteCount: faker.number.int(),
-      createdAt: faker.date.anytime(),
-      recent: faker.datatype.boolean(0.5),
+      createdAt: "2024-04-20T19:43:45.58666",
+      recent: true,
     },
     {
       projectId: faker.number.int(),
@@ -77,11 +77,11 @@ export default function Home() {
       title: faker.lorem.sentences(),
       techStack: "react, java, next, spring, express",
       position: "frontend, backend, designer, PM",
-      deadLine: `2024-${faker.number.int({ min: 1, max: 12 })}-${faker.number.int({ min: 1, max: 30 })}`,
+      deadLine: `2024-${faker.number.int({ min: 1, max: 12 }).toString().padStart(2, "0")}-${faker.number.int({ min: 1, max: 30 }).toString().padStart(2, "0")}`,
       viewCount: faker.number.int(),
       favoriteCount: faker.number.int(),
-      createdAt: faker.date.anytime(),
-      recent: faker.datatype.boolean(0.5),
+      createdAt: "2024-08-29T19:43:45.58666",
+      recent: true,
     },
   ];
 
@@ -102,11 +102,11 @@ export default function Home() {
         <Link href="/project">전체보기</Link>
       </div>
       <div className="flex flex-wrap gap-[9px] border border-black">
-        <ProjectBox />
-        <ProjectBox />
-        <ProjectBox />
-        <ProjectBox />
-        <ProjectBox />
+        {[...DUMMY_HOT_PROJECT]
+          .sort((a, b) => +new Date(b.createdAt) - +new Date(a.createdAt))
+          .map((project, i) => {
+            return <ProjectBox key={i} project={project} />;
+          })}
       </div>
     </main>
   );
