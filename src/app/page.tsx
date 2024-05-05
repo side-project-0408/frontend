@@ -105,7 +105,7 @@ export default function Home() {
         {[...DUMMY_HOT_PROJECT]
           .sort((a, b) => +new Date(b.createdAt) - +new Date(a.createdAt))
           .map((project, i) => {
-            return <ProjectBox key={i} project={project} />;
+            return <ProjectBox key={`hotProject${i}`} project={project} />;
           })}
       </div>
     </main>
