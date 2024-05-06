@@ -11,7 +11,9 @@ const config: Config = {
       backgroundImage: {},
       colors: {
         neutral: {
-          0: "ffffff",
+          0: "#fff",
+          50: "#E4E4E4",
+          100: "#999999",
           500: "#ff800b",
           800: "#141414",
         },
