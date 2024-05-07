@@ -28,7 +28,7 @@ const SelectBox = ({ height = 40, width = 129, options, title }: Props) => {
       <div>
         {isOpen && (
           <ul
-            className={`absolute top-[42px] z-[1] w-[${width}px] bg-white-0 rounded-xl border`}
+            className={`absolute top-[42px] z-[1] w-[${width}px] bg-neutral-white-0 rounded-xl border`}
           >
             {options?.map((option) => {
               return (
