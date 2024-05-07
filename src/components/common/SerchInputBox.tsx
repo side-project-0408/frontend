@@ -3,7 +3,7 @@ const SerchInputBox = () => {
     <input
       type="search"
       placeholder="검색창"
-      className="h-[40px] rounded-2xl border border-gray-50 px-3 py-2"
+      className="border-neutral-gray-50 h-[40px] rounded-2xl border px-3 py-2"
     />
   );
 };

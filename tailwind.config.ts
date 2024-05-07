@@ -10,18 +10,20 @@ const config: Config = {
     extend: {
       backgroundImage: {},
       colors: {
-        white: {
-          0: "#fff",
-        },
-        gray: {
-          50: "#E4E4E4",
-          100: "#999999",
-        },
-        orange: {
-          500: "#ff800b",
-        },
-        black: {
-          800: "#141414",
+        neutral: {
+          white: {
+            0: "#fff",
+          },
+          gray: {
+            50: "#E4E4E4",
+            100: "#999999",
+          },
+          orange: {
+            500: "#ff800b",
+          },
+          black: {
+            800: "#141414",
+          },
         },
       },
     },
