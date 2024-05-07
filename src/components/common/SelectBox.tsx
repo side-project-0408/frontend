@@ -28,14 +28,14 @@ const SelectBox = ({ height = 40, width = 129, options, title }: Props) => {
       <div>
         {isOpen && (
           <ul
-            className={`absolute top-[42px] z-[1] w-[${width}px] rounded-xl border bg-neutral-0`}
+            className={`absolute top-[42px] z-[1] w-[${width}px] bg-white-0 rounded-xl border`}
           >
             {options?.map((option) => {
               return (
                 <>
                   <li
                     key={option.key}
-                    className="px-3 py-2 font-bold hover:text-neutral-500"
+                    className="px-3 py-2 font-bold hover:text-orange-500"
                     onClick={() => {
                       setOptSelected(option.value);
                     }}
