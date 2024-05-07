@@ -2,7 +2,7 @@
 import HashTag from "./HashTag";
 import newIcon from "../../../public/image/newIcon.svg";
 import Image from "next/image";
-import { FaUserCircle } from "react-icons/fa";
+// import { FaUserCircle } from "react-icons/fa";
 import Link from "next/link";
 import IconTextBox from "./IconTextBox";
 import heartIcon from "../../../public/image/heart.svg";
@@ -57,14 +57,14 @@ export default function ContentBox() {
             <Link
               key={userId}
               href="#"
-              className="w-[288px] h-[308px] rounded-2xl p-5 flex relative flex-col transition-transform hover:-translate-y-1 hover:border-neutral-500 border-2"
+              className="relative flex h-[308px] w-[288px] flex-col rounded-2xl border-2 p-5 transition-transform hover:-translate-y-1 hover:border-orange-500"
             >
               {/* <Image src={newIcon} alt="newIcon" className="absolute top-0" /> */}
               <ImageBox imageUrl={newIcon} className="top-0" />
-              <div className="mt-[50px] flex flex-col justify-between h-full">
+              <div className="mt-[50px] flex h-full flex-col justify-between">
                 <ul className="flex">
-                  <li className="flex justify-between w-full">
-                    <FaUserCircle className="text-[#dedede] text-5xl" />
+                  <li className="flex w-full justify-between">
+                    {/* <FaUserCircle className="text-5xl text-[#dedede]" /> */}
                     <div className="flex items-center gap-1">
                       <button onClick={() => console.log("찜하기")}>
                         <IconTextBox icon={heartIcon} count={favoriteCount} />
@@ -74,7 +74,7 @@ export default function ContentBox() {
                   </li>
                 </ul>
                 <ul className="leading-[2]">
-                  <li className="text-sm whitespace-pre-line">
+                  <li className="whitespace-pre-line text-sm">
                     <h2>안녕하세요 👋🏻 </h2>
                   </li>
                   <li>
@@ -91,7 +91,7 @@ export default function ContentBox() {
                 ))}
               </div>
             </Link>
-          )
+          ),
         )}
       </div>
     </>
