@@ -42,7 +42,7 @@ export default function RootLayout({
             </section>
           </div>
         </nav>
-        <div className="bg-white px-[360px]">{children}</div>
+        <div className="bg-white px-[360px] pt-[80px]">{children}</div>
         <footer className="flex flex-col items-center border border-black">
           <section className="flex h-20 flex-row items-center gap-14">
             <div>전화: 010-0000-0000</div>

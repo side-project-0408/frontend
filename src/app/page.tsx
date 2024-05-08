@@ -87,7 +87,7 @@ export default function Home() {
 
   return (
     <main className="h-auto border border-black">
-      <div className="mt-40 flex h-60 w-full items-center justify-center border border-black bg-slate-500">
+      <div className="mt-[40px] flex h-60 w-full items-center justify-center border border-black bg-slate-500">
         배너 이미지
       </div>
       <div className="my-3 flex justify-between">
