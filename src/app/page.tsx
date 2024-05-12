@@ -86,8 +86,8 @@ export default function Home() {
   ];
 
   return (
-    <main className="h-auto border border-black">
-      <div className="mt-40 flex h-60 w-full items-center justify-center border border-black bg-slate-500">
+    <main className="h-auto">
+      <div className="mt-[40px] flex h-60 w-full items-center justify-center border border-black bg-slate-500">
         배너 이미지
       </div>
       <div className="my-3 flex justify-between">
@@ -101,7 +101,7 @@ export default function Home() {
         <div className="text-xl font-bold">이번 주 Hot Project</div>
         <Link href="/project">전체보기</Link>
       </div>
-      <div className="flex flex-wrap gap-[9px] border border-black">
+      <div className="flex flex-wrap gap-[9px]">
         {[...DUMMY_HOT_PROJECT]
           .sort((a, b) => +new Date(b.createdAt) - +new Date(a.createdAt))
           .map((project, i) => {
