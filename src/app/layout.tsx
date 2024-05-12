@@ -6,6 +6,8 @@ import Image from "next/image";
 import Link from "next/link";
 
 import logo from "../../public/logo.png";
+import { MSWComponent } from "@/mocks/MSWComponent";
+import ReactQueryProvider from "@/components/ReactQueryProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,6 +24,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
+        <MSWComponent />
         <nav className="fixed flex h-[80px] w-full flex-row items-center border border-black bg-white px-[360px] py-3">
           <Link href="/">
             <Image
@@ -42,7 +45,9 @@ export default function RootLayout({
             </section>
           </div>
         </nav>
-        <div className="bg-white px-[360px]">{children}</div>
+        <ReactQueryProvider>
+          <div className="bg-white px-[360px]">{children}</div>
+        </ReactQueryProvider>
         <footer className="flex flex-col items-center border border-black">
           <section className="flex h-20 flex-row items-center gap-14">
             <div>전화: 010-0000-0000</div>
