@@ -98,7 +98,7 @@ export default function Home({ searchParams }: Props) {
       </div>
       <div className="my-3 flex justify-between">
         <div className="text-xl font-bold">이번 주 Hot People</div>
-        <Link href="/people">전체보기</Link>
+        <Link href={`/people?size=10&page=1`}>전체보기</Link>
       </div>
       <div className="flex w-full flex-wrap items-center justify-center gap-[9px] border border-black">
         <HotPeople searchParams={searchParams} />
