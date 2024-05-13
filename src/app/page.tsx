@@ -4,7 +4,12 @@ import Link from "next/link";
 import { faker } from "@faker-js/faker";
 import HotPeople from "@/components/people/HotPeople";
 
-export default function Home() {
+type Props = {
+  searchParams: {
+    size: string;
+  };
+};
+export default function Home({ searchParams }: Props) {
   const DUMMY_HOT_PROJECT = [
     {
       projectId: faker.number.int(),
@@ -95,8 +100,8 @@ export default function Home() {
         <div className="text-xl font-bold">이번 주 Hot People</div>
         <Link href="/people">전체보기</Link>
       </div>
-      <div className="flex h-60 w-full items-center justify-center border border-black">
-        <HotPeople />
+      <div className="flex w-full flex-wrap items-center justify-center gap-[9px] border border-black">
+        <HotPeople searchParams={searchParams} />
       </div>
       <div className="my-3 flex justify-between">
         <div className="text-xl font-bold">이번 주 Hot Project</div>
