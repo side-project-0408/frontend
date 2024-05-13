@@ -75,10 +75,11 @@ export default function SelectStack() {
           onClick={stopPropagation}
         >
           <ul className={`bg-neural-orange-500 flex w-[350px] gap-4`}>
-            {stackBox.map((list, index) => (
+            {stackBox.map((list, i) => (
               <li
+                key={`list${i}`}
                 onClick={() => {
-                  setCurTab(index);
+                  setCurTab(i);
                 }}
                 className="hover:text-neutral-orange-500 font-bold"
               >
@@ -88,9 +89,10 @@ export default function SelectStack() {
           </ul>
           {/*  */}
           <ul className="flex flex-wrap">
-            {stackBox[curTab].stack.map((stackList) => (
+            {stackBox[curTab].stack.map((stackList, i) => (
               <li
-                className="flex w-fit items-center  px-3 py-2"
+                key={`stackList${i}`}
+                className="flex w-fit items-center px-3 py-2"
                 onClick={() => {
                   toggleOption(stackList.text);
                 }}
@@ -101,10 +103,10 @@ export default function SelectStack() {
           </ul>
           {/*  */}
           <ul className="flex flex-wrap items-center gap-3">
-            {optSelected.map((selec, i) => (
+            {optSelected.map((selec) => (
               <>
                 <li
-                  key={`optSelected${i}`}
+                  key={selec}
                   className="flex items-center gap-1 rounded-2xl border px-2 py-1 text-sm"
                 >
                   <h1>{selec}</h1>
