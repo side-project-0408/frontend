@@ -1,9 +1,8 @@
 "use client";
 import getPeoples from "@/lib/people/getPeoples";
-import ContentBox from "../common/ContentBox";
 import { GetPeoples } from "@/model/peoples";
 import { useQuery } from "@tanstack/react-query";
-import { useSearchParams } from "next/navigation";
+import PeopleContentBox from "./PeopleContentBox";
 
 type Props = {
   searchParams: {
@@ -27,11 +26,16 @@ export default function Peoples({ searchParams }: Props) {
     queryFn: getPeoples,
     // 데이퍼 패칭 처럼 행동 //content박스에 넘겨주면 리렌더링 됨
   });
+  const sortedData = data?.data.sort((a, b) => {
+    if (a.recent && !b.recent) return -1;
+    if (!a.recent && b.recent) return 1;
+    return 0;
+  });
 
   return (
-    <div className="grid grid-cols-4">
-      {data?.data.map((contentData) => (
-        <ContentBox key={contentData.userId} contentData={contentData} />
+    <div className="grid grid-cols-4 gap-y-7">
+      {sortedData?.map((contentData) => (
+        <PeopleContentBox key={contentData.userId} contentData={contentData} />
       ))}
     </div>
   );
