@@ -23,53 +23,70 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body
+        className={`${inter.className} flex flex-col items-center bg-white`}
+      >
         <MSWComponent />
-        <nav className="fixed flex h-[80px] w-full flex-row items-center border border-black bg-white px-[360px] py-3">
-          <Link href="/">
-            <Image
-              src={logo}
-              alt="this is logo image"
-              className="w-[100px]"
-            ></Image>
-          </Link>
-          <div className="flex w-full flex-row justify-between">
-            <section className="ml-24 flex gap-20 border border-black text-[18px] font-medium text-[#363636]">
-              <Link href={"project"}>Project</Link>
-              <Link href={"people"}>People</Link>
-            </section>
-            <section className="flex gap-2.5 border border-black">
-              <Link href={"logout"}>로그아웃</Link>
-              <Link href={"login"}>로그인</Link>
-              <Link href={"myinfo"}>마이페이지</Link>
-            </section>
+        <nav className="fixed flex h-[80px] w-full flex-row items-center justify-center border-b-[1px] border-[#E4E4E4] bg-white py-3">
+          <div className="flex max-w-[1200px] flex-1 flex-row items-center justify-center gap-[40px]">
+            <Link href="/">
+              <Image
+                src={logo}
+                alt="this is logo image"
+                className="w-[100px]"
+              ></Image>
+            </Link>
+            <div className="flex w-full flex-row justify-between">
+              <section className="flex gap-20 text-[18px] font-medium text-[#363636]">
+                <Link href={"/project"}>Project</Link>
+                <Link href={"/people"}>People</Link>
+              </section>
+              <section className="flex gap-2.5">
+                <Link href={"/logout"}>로그아웃</Link>
+                <Link href={"/login"}>로그인</Link>
+                <Link href={"/myinfo"}>마이페이지</Link>
+              </section>
+            </div>
           </div>
         </nav>
         <ReactQueryProvider>
-          <div className="bg-white px-[360px]">{children}</div>
+          <div className="max-w-[1200px] bg-white py-[80px]">{children}</div>
         </ReactQueryProvider>
-        <footer className="flex flex-col items-center border border-black">
-          <section className="flex h-20 flex-row items-center gap-14">
-            <div>전화: 010-0000-0000</div>
-            <div>주소: 서울시 서울구 서울로 1234-7</div>
-            <Link
-              href="https://www.naver.com"
-              target="_blank"
-              prefetch={false}
-              className="underline"
-            >
-              개인정보 처리방침
-            </Link>
-            <Link
-              href="https://www.google.com"
-              target="_blank"
-              prefetch={false}
-              className="underline"
-            >
-              이용 약관
-            </Link>
-          </section>
-          <div>Copyright © 2024 Match Mate</div>
+        <footer className="flex w-full justify-center bg-gray-100">
+          <div className="flex max-w-[1200px] flex-1 flex-row justify-evenly">
+            <section>
+              <div className="h-[50px] w-[150px]">이미지</div>
+              <div>전화: 010-0000-0000</div>
+              <div>주소: 서울시 서울구 서울로 1234-7</div>
+              <div>Copyright © 2024 Match Mate</div>
+            </section>
+            <section className="flex h-20 flex-row items-center gap-14">
+              <Link
+                href="https://www.naver.com"
+                target="_blank"
+                prefetch={false}
+                className="underline"
+              >
+                개인정보 처리방침
+              </Link>
+              <Link
+                href="https://www.google.com"
+                target="_blank"
+                prefetch={false}
+                className="underline"
+              >
+                이용 약관
+              </Link>
+              <Link
+                href="https://www.naver.com"
+                target="_blank"
+                prefetch={false}
+                className="underline"
+              >
+                서비스 소개
+              </Link>
+            </section>
+          </div>
         </footer>
       </body>
     </html>
