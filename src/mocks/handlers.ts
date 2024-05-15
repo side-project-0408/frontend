@@ -1,18 +1,15 @@
 import { http, HttpResponse } from "msw";
-import { faker } from "@faker-js/faker";
-import { hotPeople, peoples } from "./api/people";
+import { hotPeople, peoples } from "./peopleData";
 
 // `peoples?page=${0}&size=${10}&sort=${recent}`
 
 // peoples?page=0&size=10&sort=RECENT'
 
 export const handlers = [
-  http.get("/api/peoples/hot", () => {
+  http.get("/peoples/hot/:tag", () => {
     return HttpResponse.json(hotPeople);
   }),
-  http.get("/api/peoples", ({ request }) => {
-    const url = new URL(request.url);
-
+  http.get("/peoples", ({ request, params }) => {
     return HttpResponse.json(peoples);
   }),
 ];
