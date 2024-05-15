@@ -19,7 +19,7 @@ export const getPeoples: QueryFunction<
   const [_1, _2, searchParams] = queryKey;
 
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/peoples/${searchParams.page}?${searchParams.toString()}`,
+    `${process.env.NEXT_PUBLIC_BASE_URL}/peoples?page=${searchParams.page}&size=${searchParams.size}&${searchParams.keyword}&${searchParams.position}&${searchParams.sort}&${searchParams.teckStack}`,
     {
       next: {
         tags: ["get", "peoples", searchParams.page],
