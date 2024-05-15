@@ -9,7 +9,7 @@ export type Props = {
   title: string;
   onClick: (optionValue: string) => void;
   optSelected: string;
-  options: { key: number; value: string }[];
+  options: { key: string; value: string }[];
 };
 const SelectBox = ({
   height = 40,
@@ -39,10 +39,10 @@ const SelectBox = ({
           <ul
             className={`absolute top-[42px] z-[1] w-[${width}px] bg-neutral-white-0 rounded-xl border`}
           >
-            {options?.map((option) => {
+            {options?.map((option, i) => {
               return (
                 <li
-                  key={option.key}
+                  key={`option${i}`}
                   className="px-3 py-2 font-bold hover:text-orange-500"
                   onClick={() => onClick(option.value)}
                 >
