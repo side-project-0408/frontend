@@ -6,6 +6,8 @@ import Image from "next/image";
 import Link from "next/link";
 
 import logo from "../../public/logo.png";
+import { MSWComponent } from "@/mocks/MSWComponent";
+import ReactQueryProvider from "@/components/ReactQueryProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -24,6 +26,7 @@ export default function RootLayout({
       <body
         className={`${inter.className} flex flex-col items-center bg-white`}
       >
+        <MSWComponent />
         <nav className="fixed flex h-[80px] w-full flex-row items-center justify-center border-b-[1px] border-[#E4E4E4] bg-white py-3">
           <div className="flex max-w-[1200px] flex-1 flex-row items-center justify-center gap-[40px]">
             <Link href="/">
@@ -46,7 +49,9 @@ export default function RootLayout({
             </div>
           </div>
         </nav>
-        <div className="max-w-[1200px] bg-white py-[80px]">{children}</div>
+        <ReactQueryProvider>
+          <div className="max-w-[1200px] bg-white py-[80px]">{children}</div>
+        </ReactQueryProvider>
         <footer className="flex w-full justify-center bg-gray-100">
           <div className="flex max-w-[1200px] flex-1 flex-row justify-evenly">
             <section>
