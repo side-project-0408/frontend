@@ -24,7 +24,7 @@ export const handlers = [
         position: "Backend",
         userFileUrl: "/Users/user/Desktop/pictures/userPicture.jpg",
         year: "경력없음",
-        techStack: "react, java, ---",
+        techStack: "react,Java, ---",
         softSkill: "소통, 적극성, ---",
         links: "http://블로그주소",
         alarmStatus: true,
