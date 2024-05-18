@@ -1,7 +1,6 @@
 import HashTag from "../common/HashTag";
 import newIcon from "../../../public/image/newIcon.svg";
 import Link from "next/link";
-import ImageBox from "../common/ImageBox";
 import { GetPeoplesData } from "@/model/peoples";
 import ContentBoxTop from "./ContentBoxTop";
 import Image from "next/image";
