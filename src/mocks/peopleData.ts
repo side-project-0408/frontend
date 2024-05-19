@@ -119,3 +119,22 @@ export const peoples = {
     },
   ],
 };
+
+export const users = {
+  result: "success",
+  data: [
+    {
+      userId: 3,
+      nickName: "닉네임bb (중복체크 필요)",
+      userFileUrl: "/Users/user/Desktop/prictures/userPicture.jpg",
+      techStack: "java, spring...",
+      position: "FrontEnd",
+      employmentStatus: false,
+      year: "경력없음",
+      links: "http://블로그주소",
+      alarmStatus: true,
+      content: "안녕하세요 구인 중입니다",
+      softSkill: "소통 능력, 팀원간의 화합, ---",
+    },
+  ],
+};

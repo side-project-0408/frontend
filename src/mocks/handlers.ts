@@ -1,5 +1,5 @@
 import { http, HttpResponse } from "msw";
-import { hotPeople, peoples } from "./peopleData";
+import { hotPeople, peoples, users } from "./peopleData";
 
 // `peoples?page=${0}&size=${10}&sort=${recent}`
 
@@ -11,6 +11,9 @@ export const handlers = [
   }),
   http.get("/peoples", ({ request, params }) => {
     return HttpResponse.json(peoples);
+  }),
+  http.get("/users", () => {
+    return HttpResponse.json(users);
   }),
 ];
 
