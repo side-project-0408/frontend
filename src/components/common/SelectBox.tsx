@@ -32,7 +32,7 @@ const SelectBox = ({
       className={`w-[${width}px] h-[${height}px] relative cursor-pointer border ${className}`}
       onClick={ToggleHandler}
     >
-      <div className="absolute top-[50%] flex w-full -translate-y-1/2 transform items-center justify-around">
+      <div className="absolute top-[50%] flex w-full -translate-y-1/2 transform items-center justify-between px-[10px]">
         {optSelected ? <span>{optSelected}</span> : <span>{title}</span>}
         <IoIosArrowDown />
       </div>
