@@ -60,6 +60,7 @@ export default function PeoplePage({ searchParams }: Props) {
             options={option}
             title="포지션"
             optSelected={optSelected}
+            className="rounded-2xl"
           />
           <SelectStack />
         </div>

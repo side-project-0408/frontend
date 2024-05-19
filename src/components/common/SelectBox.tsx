@@ -10,6 +10,7 @@ export type Props = {
   onClick: (optionValue: string) => void;
   optSelected: string;
   options: { key: string; value: string }[];
+  className?: string;
 };
 const SelectBox = ({
   height = 40,
@@ -18,6 +19,7 @@ const SelectBox = ({
   optSelected,
   title,
   onClick,
+  className,
 }: Props) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
@@ -27,7 +29,7 @@ const SelectBox = ({
 
   return (
     <div
-      className={`w-[${width}px] h-[${height}px] relative cursor-pointer rounded-2xl border`}
+      className={`w-[${width}px] h-[${height}px] relative cursor-pointer border ${className}`}
       onClick={ToggleHandler}
     >
       <div className="absolute top-[50%] flex w-full -translate-y-1/2 transform items-center justify-around">
