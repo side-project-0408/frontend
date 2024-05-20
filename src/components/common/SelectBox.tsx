@@ -1,5 +1,4 @@
 "use client";
-import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { IoIosArrowDown } from "react-icons/io";
 
@@ -9,7 +8,7 @@ export type Props = {
   title: string;
   onClick: (optionValue: string) => void;
   optSelected: string;
-  options: { key: string; value: string }[];
+  options: { id: number; value: string }[];
   className?: string;
 };
 const SelectBox = ({
@@ -41,10 +40,10 @@ const SelectBox = ({
           <ul
             className={`absolute top-[42px] z-[1] w-[${width}px] bg-neutral-white-0 rounded-xl border`}
           >
-            {options?.map((option, i) => {
+            {options?.map((option) => {
               return (
                 <li
-                  key={`option${i}`}
+                  key={option.id}
                   className="px-3 py-2 font-bold hover:text-orange-500"
                   onClick={() => onClick(option.value)}
                 >
