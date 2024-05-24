@@ -1,5 +1,5 @@
 import { bypass, http, HttpResponse } from "msw";
-import { hotPeople, peoples, users } from "./peopleData";
+import { hotPeople, peoples, posts, users } from "./peopleData";
 
 // `peoples?page=${0}&size=${10}&sort=${recent}`
 
@@ -17,6 +17,9 @@ export const handlers = [
   }),
   http.patch("/users", async ({ request }) => {
     return HttpResponse.text("success?");
+  }),
+  http.get("/posts", async () => {
+    return HttpResponse.json(posts);
   }),
 ];
 
