@@ -1,3 +1,9 @@
+import ProjectCard from "@/components/mypage/ProjectCard";
+
 export default function UserActivitiPage() {
-  return <div>나의활동 페이지</div>;
+  return (
+    <div>
+      <ProjectCard />
+    </div>
+  );
 }
