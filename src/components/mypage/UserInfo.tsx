@@ -14,7 +14,11 @@ import { IoMdCloseCircle } from "react-icons/io";
 import { FaCirclePlus } from "react-icons/fa6";
 import Select from "react-select";
 import makeAnimated from "react-select/animated";
-import { useMutation } from "@tanstack/react-query";
+import {
+  QueryClient,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
 import AddInput from "./AddInput";
 
 interface Option {
@@ -64,6 +68,8 @@ export default function UserInfo({
   user,
   user: { userFileUrl, nickName, position, content, userId, techStack },
 }: Props) {
+  const queryClient = useQueryClient();
+
   const [image, setImage] = useState<ImageFile>(null);
 
   const [product, setProduct] = useState<GetUserData>(user);
@@ -97,6 +103,11 @@ export default function UserInfo({
       fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/users`, {
         method: "PATCH",
         body: JSON.stringify(updatedUser),
+      });
+    },
+    onSettled(data, error, variables, context) {
+      queryClient.invalidateQueries({
+        queryKey: ["get", "userinfo"],
       });
     },
   });
