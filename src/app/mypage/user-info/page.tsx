@@ -1,6 +1,6 @@
 "use client";
 import UserInfo from "@/components/mypage/UserInfo";
-import getUserInfo from "@/lib/people/getUserInfo";
+import getUserInfo from "@/lib/mypage/getUserInfo";
 import { GetUsers } from "@/model/userInfo";
 import { useQuery } from "@tanstack/react-query";
 
