@@ -18,8 +18,10 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
+  modal,
 }: Readonly<{
   children: React.ReactNode;
+  modal: React.ReactNode;
 }>) {
   return (
     <html lang="en">
@@ -42,15 +44,16 @@ export default function RootLayout({
                 <Link href={"/people"}>People</Link>
               </section>
               <section className="flex gap-2.5">
-                <Link href={"/logout"}>로그아웃</Link>
-                <Link href={"/login"}>로그인</Link>
-                <Link href={"/myinfo"}>마이페이지</Link>
+                <Link href="/logout">로그아웃</Link>
+                <Link href="/login">로그인</Link>
+                <Link href="/myinfo">마이페이지</Link>
               </section>
             </div>
           </div>
         </nav>
         <ReactQueryProvider>
           <div className="max-w-[1200px] bg-white py-[80px]">{children}</div>
+          {modal}
         </ReactQueryProvider>
         <footer className="flex w-full justify-center bg-gray-100">
           <div className="flex max-w-[1200px] flex-1 flex-row justify-evenly">
