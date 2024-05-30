@@ -1,17 +1,12 @@
 "use client";
 import { redirect } from "next/navigation";
 import { useEffect } from "react";
-import { useCookies } from "next-client-cookies";
+import { getCookie } from "cookies-next";
 
 export default function MyPage() {
-  const cookies = useCookies();
-
   useEffect(() => {
-    console.log("access_token", cookies.get("access_token"));
-    console.log("refresh_token", cookies.get("refresh_token"));
-  }, [cookies]);
-
-  // redirect("/mypage/user-info");
-
+    console.log("access_token", getCookie("access_token"));
+    console.log("refresh_token", getCookie("refresh_token"));
+  }, []);
   return <div>my page</div>;
 }
