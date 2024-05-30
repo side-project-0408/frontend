@@ -7,8 +7,8 @@ export const getPeoples: QueryFunction<
     _1: string,
     _2: string,
     searchParams: {
-      page: string;
-      size: string;
+      page?: string;
+      size?: string;
       sort?: string;
       keyword?: string;
       position?: string;
@@ -18,13 +18,28 @@ export const getPeoples: QueryFunction<
 > = async ({ queryKey }) => {
   const [_1, _2, searchParams] = queryKey;
 
+  const defaultParams = {
+    page: "0",
+    size: "10",
+  };
+
+  const queryParams = new URLSearchParams({
+    ...defaultParams,
+    ...searchParams,
+  });
+
+  if (!searchParams.sort) {
+    queryParams.append("sort", '"POPULAR"');
+  } else {
+    queryParams.set("sort", `"${searchParams.sort}"`);
+  }
+
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/peoples?page=${searchParams.page}&size=${searchParams.size}&${searchParams.keyword}&${searchParams.position}&${searchParams.sort}&${searchParams.teckStack}`,
+    `${process.env.NEXT_PUBLIC_BASE_URL}/peoples?${queryParams.toString()}`,
     {
       next: {
-        tags: ["get", "peoples", searchParams.page],
+        tags: ["get", "peoples", searchParams.page || "1"],
       },
-      //캐시 해제
       cache: "no-store",
     },
   );
