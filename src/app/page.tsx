@@ -92,27 +92,33 @@ export default function Home({ searchParams }: Props) {
   ];
 
   return (
-    <main className="h-auto">
-      <div className="mt-[40px] flex h-60 w-full items-center justify-center border border-black bg-slate-500">
+    <main className="flex h-auto flex-col gap-[20px]">
+      <div className="my-[20px] flex h-60 w-full items-center justify-center border">
         배너 이미지
       </div>
-      <div className="my-3 flex justify-between">
-        <div className="text-xl font-bold">이번 주 Hot People</div>
-        <Link href={`/people?size=10&page=1`}>전체보기</Link>
-      </div>
-      <div className="flex w-full flex-wrap items-center justify-center gap-[9px] border border-black">
-        <HotPeople searchParams={searchParams} />
-      </div>
-      <div className="my-3 flex justify-between">
-        <div className="text-xl font-bold">이번 주 Hot Project</div>
-        <Link href="/project">전체보기</Link>
-      </div>
-      <div className="flex flex-wrap gap-[9px]">
-        {[...DUMMY_HOT_PROJECT]
-          .sort((a, b) => +new Date(b.createdAt) - +new Date(a.createdAt))
-          .map((project, i) => {
-            return <ProjectBox key={`hotProject${i}`} project={project} />;
-          })}
+      <div className="flex flex-col gap-[60px]">
+        <div className="flex flex-col gap-[20px]">
+          <div className="flex justify-between">
+            <div className="text-xl font-bold">이번 주 Hot People</div>
+            <Link href={`/people`}>전체보기</Link>
+          </div>
+          <div className="flex flex-wrap items-center gap-[9px]">
+            <HotPeople searchParams={searchParams} />
+          </div>
+        </div>
+        <div className="flex flex-col gap-[20px]">
+          <div className="my-3 flex justify-between">
+            <div className="text-xl font-bold">이번 주 Hot Project</div>
+            <Link href="/project">전체보기</Link>
+          </div>
+          <div className="flex flex-wrap gap-[9px]">
+            {[...DUMMY_HOT_PROJECT]
+              .sort((a, b) => +new Date(b.createdAt) - +new Date(a.createdAt))
+              .map((project, i) => {
+                return <ProjectBox key={`hotProject${i}`} project={project} />;
+              })}
+          </div>
+        </div>
       </div>
     </main>
   );
