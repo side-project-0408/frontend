@@ -8,6 +8,12 @@ const nextConfig = {
         port: "",
         pathname: "/account_images/default_profile.jpeg.twg.thumb.R640x640",
       },
+      {
+        protocol: "http",
+        hostname: "k.kakaocdn.net",
+        port: "",
+        pathname: "**",
+      },
     ],
   },
 };
