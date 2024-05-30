@@ -32,12 +32,13 @@ const stackBox = [
     ],
   },
 ];
+type Props = {
+  optSelected: string[];
+  setOptSelected: React.Dispatch<React.SetStateAction<string[]>>;
+};
 
-export default function SelectStack() {
+export default function SelectStack({ optSelected, setOptSelected }: Props) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-
-  const [optSelected, setOptSelected] = useState<string[]>([]);
-
   const [curTab, setCurTab] = useState<number>(0);
 
   const stopPropagation = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
@@ -54,7 +55,7 @@ export default function SelectStack() {
   };
 
   const onClickDeleteStack = (stack: string) => {
-    setOptSelected((prev) => prev.filter((opt) => opt !== stack));
+    setOptSelected((prev: string[]) => prev.filter((opt) => opt !== stack));
   };
 
   return (
@@ -71,7 +72,7 @@ export default function SelectStack() {
       {/*  */}
       {isOpen && (
         <div
-          className="bg-neutral-white-0 absolute top-[42px] z-[1] flex w-[600px] flex-col gap-3 rounded-2xl border p-3 text-lg"
+          className="absolute top-[42px] z-[1] flex w-[600px] flex-col gap-3 rounded-2xl border bg-neutral-white-0 p-3 text-lg"
           onClick={stopPropagation}
         >
           <ul className={`bg-neural-orange-500 flex w-[350px] gap-4`}>
@@ -81,7 +82,7 @@ export default function SelectStack() {
                 onClick={() => {
                   setCurTab(i);
                 }}
-                className="hover:text-neutral-orange-500 font-bold"
+                className="font-bold hover:text-neutral-orange-500"
               >
                 {list.title}
               </li>
@@ -104,19 +105,17 @@ export default function SelectStack() {
           {/*  */}
           <ul className="flex flex-wrap items-center gap-3">
             {optSelected.map((selec) => (
-              <>
-                <li
-                  key={selec}
-                  className="flex items-center gap-1 rounded-2xl border px-2 py-1 text-sm"
-                >
-                  <h1>{selec}</h1>
-                  <IoMdCloseCircle
-                    onClick={() => {
-                      onClickDeleteStack(selec);
-                    }}
-                  />
-                </li>
-              </>
+              <li
+                key={selec}
+                className="flex items-center gap-1 rounded-2xl border px-2 py-1 text-sm"
+              >
+                <h1>{selec}</h1>
+                <IoMdCloseCircle
+                  onClick={() => {
+                    onClickDeleteStack(selec);
+                  }}
+                />
+              </li>
             ))}
             <li
               className="flex items-center gap-1 text-sm"
