@@ -14,7 +14,7 @@ export const hotPeopls: QueryFunction<
   const [_1, _2, searchParams] = queryKey;
 
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/peoples/hot/${searchParams.size}?${searchParams.toString()}`,
+    `${process.env.NEXT_PUBLIC_BASE_URL}/peoples/hot?size=10`,
     {
       next: {
         tags: ["get", "hotpeoples", searchParams.size],
