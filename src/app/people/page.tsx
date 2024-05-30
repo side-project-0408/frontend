@@ -30,13 +30,20 @@ export default function PeoplePage({ searchParams }: Props) {
   const [selectedStack, setSelectedStack] = useState<string[]>([]);
   const [keyword, setKeyword] = useState<string>("");
 
-  const onClickSelectBox = (value: string) => {
-    setOptSelected(value);
+  const changeSearchParams = (key: string, value: any) => {
     const newSearchParams = new URLSearchParams({
       ...searchParams,
-      position: value,
+      [key]: value,
     });
+    if (!value) {
+      newSearchParams.delete(key);
+    }
     router.replace(`/people?${newSearchParams.toString()}`);
+  };
+
+  const onClickSelectBox = (value: string) => {
+    setOptSelected(value);
+    changeSearchParams("position", value);
   };
 
   const ref = useRef<any>();
@@ -44,23 +51,13 @@ export default function PeoplePage({ searchParams }: Props) {
   const onSubmitSearch: FormEventHandler<HTMLFormElement> = (event) => {
     event.preventDefault();
     setKeyword(ref.current.value);
-    const newSearchParams = new URLSearchParams({
-      ...searchParams,
-      keyword: ref.current.value,
-    });
-    setKeyword("");
-    console.log("setKeyword", keyword);
-
-    router.replace(`/people?${newSearchParams.toString()}`);
+    changeSearchParams("keyword", ref.current.value);
+    ref.current.value = "";
   };
 
   //기술스택 쿼리파람즈 추가
   useEffect(() => {
-    const newSearchParams = new URLSearchParams({
-      ...searchParams,
-      teckStack: selectedStack.join(","),
-    });
-    router.replace(`/people?${newSearchParams.toString()}`);
+    changeSearchParams("teckStack", selectedStack.join(","));
   }, [selectedStack]);
 
   return (
@@ -89,14 +86,14 @@ export default function PeoplePage({ searchParams }: Props) {
       <div className="flex justify-end gap-3">
         <button
           onClick={() => {
-            router.push(`/people?sort=RECENT`);
+            changeSearchParams("sort", "RECENT");
           }}
         >
           최신순
         </button>
         <button
           onClick={() => {
-            router.push(`/people?sort=POPULAR`);
+            changeSearchParams("sort", "POPULAR");
           }}
         >
           인기순
