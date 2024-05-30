@@ -63,6 +63,7 @@ export default function SelectStack({ optSelected, setOptSelected }: Props) {
       tabIndex={0}
       onFocus={() => setIsOpen(true)}
       onBlur={() => setIsOpen(false)}
+      onClick={() => setIsOpen((prev) => !prev)}
     >
       <div className="absolute top-[50%] flex w-full -translate-y-1/2 transform items-center justify-around">
         <span>기술스택</span>
