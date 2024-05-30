@@ -29,6 +29,7 @@ export default function PeoplePage({ searchParams }: Props) {
   const [optSelected, setOptSelected] = useState<string>("");
   const [selectedStack, setSelectedStack] = useState<string[]>([]);
   const [keyword, setKeyword] = useState<string>("");
+  const ref = useRef<any>();
 
   const changeSearchParams = (key: string, value: any) => {
     const newSearchParams = new URLSearchParams({
@@ -46,8 +47,6 @@ export default function PeoplePage({ searchParams }: Props) {
     changeSearchParams("position", value);
   };
 
-  const ref = useRef<any>();
-
   const onSubmitSearch: FormEventHandler<HTMLFormElement> = (event) => {
     event.preventDefault();
     setKeyword(ref.current.value);
@@ -61,7 +60,7 @@ export default function PeoplePage({ searchParams }: Props) {
   }, [selectedStack]);
 
   return (
-    <div>
+    <div className="flex flex-col gap-[20px]">
       <div className="relative flex items-center gap-4">
         <h1 className="text-[36px] font-bold">People</h1>
         <p className="title-content relative text-[15px] text-neutral-gray-100">
