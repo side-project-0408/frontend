@@ -7,10 +7,10 @@ import { useRouter } from "next/navigation";
 import { FormEventHandler, useEffect, useRef, useState } from "react";
 
 const option = [
-  { key: "frontend", value: "프론트엔드" },
-  { key: "beckend", value: "백엔드" },
-  { key: "designer", value: "디자이너" },
-  { key: "planner", value: "기획자" },
+  { key: "frontend", value: "frontend" },
+  { key: "beckend", value: "backend" },
+  { key: "designer", value: "designer" },
+  { key: "planner", value: "planner" },
 ];
 
 type Props = {
