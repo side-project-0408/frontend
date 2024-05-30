@@ -4,7 +4,7 @@ import SelectStack from "@/components/common/SelectStack";
 import Peoples from "@/components/people/Peoples";
 import SearchForm from "@/components/common/SearchForm";
 import { useRouter } from "next/navigation";
-import { FormEventHandler, useRef, useState } from "react";
+import { FormEventHandler, useEffect, useRef, useState } from "react";
 
 const option = [
   { key: "frontend", value: "프론트엔드" },
@@ -23,17 +23,19 @@ type Props = {
     teckStack?: string;
   };
 };
+
 export default function PeoplePage({ searchParams }: Props) {
   const router = useRouter();
-
-  const newSearchParams = new URLSearchParams(searchParams);
   const [optSelected, setOptSelected] = useState<string>("");
-
+  const [selectedStack, setSelectedStack] = useState<string[]>([]);
   const [keyword, setKeyword] = useState<string>("");
 
   const onClickSelectBox = (value: string) => {
     setOptSelected(value);
-    newSearchParams.set("position", value);
+    const newSearchParams = new URLSearchParams({
+      ...searchParams,
+      position: value,
+    });
     router.replace(`/people?${newSearchParams.toString()}`);
   };
 
@@ -42,14 +44,30 @@ export default function PeoplePage({ searchParams }: Props) {
   const onSubmitSearch: FormEventHandler<HTMLFormElement> = (event) => {
     event.preventDefault();
     setKeyword(ref.current.value);
-    router.push(`/people?keyword=${ref.current.value}`);
+    const newSearchParams = new URLSearchParams({
+      ...searchParams,
+      keyword: ref.current.value,
+    });
+    setKeyword("");
+    console.log("setKeyword", keyword);
+
+    router.replace(`/people?${newSearchParams.toString()}`);
   };
+
+  //기술스택 쿼리파람즈 추가
+  useEffect(() => {
+    const newSearchParams = new URLSearchParams({
+      ...searchParams,
+      teckStack: selectedStack.join(","),
+    });
+    router.replace(`/people?${newSearchParams.toString()}`);
+  }, [selectedStack]);
 
   return (
     <div>
-      <div className="items-cebter relative flex gap-4">
+      <div className="relative flex items-center gap-4">
         <h1 className="text-[36px] font-bold">People</h1>
-        <p className="title-content text-neutral-gray-100 relative text-[15px]">
+        <p className="title-content relative text-[15px] text-neutral-gray-100">
           우리가 people에게 직접 제안하고 프로젝트를 구성할 수 있어요.
         </p>
       </div>
@@ -61,7 +79,10 @@ export default function PeoplePage({ searchParams }: Props) {
             title="포지션"
             optSelected={optSelected}
           />
-          <SelectStack />
+          <SelectStack
+            optSelected={selectedStack}
+            setOptSelected={setSelectedStack}
+          />
         </div>
         <SearchForm ref={ref} onSubmit={onSubmitSearch} />
       </div>
