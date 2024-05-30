@@ -31,9 +31,11 @@ export default function Peoples({ searchParams }: Props) {
     if (!a.recent && b.recent) return 1;
     return 0;
   });
-
+  if (data?.data.length === 0) {
+    return <div>값이 없습니다. 다른걸 검색해주세요!</div>;
+  }
   return (
-    <div className="grid grid-cols-4 gap-y-7">
+    <div className="grid grid-cols-4 gap-[15px]">
       {sortedData?.map((contentData) => (
         <PeopleContentBox key={contentData.userId} contentData={contentData} />
       ))}
