@@ -30,6 +30,9 @@ const SelectBox = ({
     <div
       className={`w-[${width}px] h-[${height}px] relative cursor-pointer border ${className}`}
       onClick={ToggleHandler}
+      tabIndex={0}
+      onFocus={() => setIsOpen(true)}
+      onBlur={() => setIsOpen(false)}
     >
       <div className="absolute top-[50%] flex w-full -translate-y-1/2 transform items-center justify-between px-[10px]">
         {optSelected ? <span>{optSelected}</span> : <span>{title}</span>}
@@ -38,7 +41,7 @@ const SelectBox = ({
       <div>
         {isOpen && (
           <ul
-            className={`absolute top-[42px] z-[1] w-[${width}px] bg-neutral-white-0 rounded-xl border`}
+            className={`absolute top-[42px] z-[1] w-[${width}px] rounded-xl border bg-neutral-white-0`}
           >
             {options?.map((option) => {
               return (
