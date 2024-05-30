@@ -1,22 +1,22 @@
 import HashTag from "../common/HashTag";
 import newIcon from "../../../public/image/newIcon.svg";
-import Link from "next/link";
 import { GetPeoplesData } from "@/model/peoples";
 import ContentBoxTop from "./ContentBoxTop";
 import Image from "next/image";
+import Link from "next/link";
 
 type Props = {
   contentData: GetPeoplesData;
 };
+
 export default function PeopleContentBox({ contentData }: Props) {
   const data = contentData;
 
   return (
     <div className="flex h-full gap-4">
       <Link
-        key={data.userId}
         href={`/people/${data.userId}`}
-        className="bg-neutral-white-0 relative flex h-full w-[288px] flex-col rounded-2xl border-2 p-5 transition-transform hover:-translate-y-1 hover:border-orange-500"
+        className="relative flex h-full w-[288px] flex-col rounded-2xl border-2 bg-neutral-white-0 p-5 transition-transform hover:-translate-y-1 hover:border-orange-500"
       >
         {data.recent && (
           <Image
