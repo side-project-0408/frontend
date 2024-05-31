@@ -1,4 +1,4 @@
-export interface IHotProjects {
+export interface IProjects {
   result: string;
   data: {
     projectId: number;

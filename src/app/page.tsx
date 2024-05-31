@@ -5,7 +5,7 @@ import { faker } from "@faker-js/faker";
 import HotPeople from "@/components/people/HotPeople";
 import { QueryClient } from "@tanstack/react-query";
 import { getHotProjects } from "../lib/project/getHotProjects";
-import { IHotProjects } from "@/model/projects";
+import { IProjects } from "@/model/projects";
 
 type Props = {
   searchParams: {
@@ -21,7 +21,7 @@ export default async function Home({ searchParams }: Props) {
     queryFn: getHotProjects,
   });
 
-  const hotProjectsResp: IHotProjects | undefined = queryClient.getQueryData([
+  const hotProjectsResp: IProjects | undefined = queryClient.getQueryData([
     "project",
     "hot",
   ]);
