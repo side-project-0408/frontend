@@ -1,4 +1,20 @@
-export default function Project() {
+import { getTotalProjects } from "@/lib/project/getTotalProjects";
+import { IProjects } from "@/model/projects";
+import { QueryClient } from "@tanstack/react-query";
+
+export default async function Project() {
+  const queryClient = new QueryClient();
+
+  await queryClient.prefetchQuery({
+    queryKey: ["project", "total"],
+    queryFn: getTotalProjects,
+  });
+  const totalProjectsResp: IProjects | undefined = queryClient.getQueryData([
+    "project",
+    "total",
+  ]);
+
+  console.log("totalProjectsResp", totalProjectsResp);
   return (
     <div>
       <div className="relative flex items-center gap-4">
