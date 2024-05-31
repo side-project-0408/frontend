@@ -6,6 +6,10 @@ const nextConfig = {
         protocol: "http",
         hostname: "**.kakaocdn.net",
       },
+      {
+        protocol: "https",
+        hostname: "**.s3.ap-northeast-2.amazonaws.com",
+      },
     ],
   },
 };
