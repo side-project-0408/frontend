@@ -1,5 +1,7 @@
 import Link from "next/link";
-import newIcon from "../../../public/newIcon.svg";
+import newIcon from "../../../public/image/newIcon.svg";
+import heart from "../../../public/image/heart.svg";
+import eye from "../../../public/image/eye.svg";
 import Image from "next/image";
 import TechStack from "./TechStack";
 import BlueTextBox from "./BlueTextBox";
@@ -12,7 +14,7 @@ type Props = {
     title: string;
     techStack: string;
     position: string;
-    deadLine: string;
+    deadline: string;
     viewCount: number;
     favoriteCount: number;
     createdAt: string;
@@ -77,7 +79,7 @@ export default function ProjectBox({ project }: Props) {
         {project.title}
       </div>
       <div className="mt-[8px] text-[12px] font-medium text-[#666666]">
-        {`마감일 | ${project.deadLine.replaceAll("-", ".")}`}
+        {`마감일 | ${project.deadline.replaceAll("-", ".")}`}
       </div>
       <div className="mt-[16px] flex gap-[10px] overflow-hidden">
         {project.techStack.split(", ").map((t, i) => (
@@ -85,8 +87,23 @@ export default function ProjectBox({ project }: Props) {
         ))}
       </div>
       <hr className="mt-[27px]" />
-      <div className="mt-[10px] border border-black">
-        {`${project.createdAt.split("T")[0]}(for 정렬 순서 확인)`}
+      <div className="mt-[10px] flex justify-between">
+        <section className="flex items-center gap-[8px]">
+          <Image
+            className="rounded-2xl"
+            src={project.userFileUrl}
+            alt="This is user profile image"
+            width={30}
+            height={30}
+          />
+          <div className="text-[14px] font-semibold">{project.nickname}</div>
+        </section>
+        <section className="flex items-center gap-[4px]">
+          <Image src={heart} alt="This is heart icon" />
+          <div>{project.favoriteCount}</div>
+          <Image src={eye} alt="This is eye icon" className="ml-[4px]" />
+          <div>{project.viewCount}</div>
+        </section>
       </div>
     </Link>
   );

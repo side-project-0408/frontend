@@ -4,15 +4,11 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: "http",
-        hostname: "t1.kakaocdn.net",
-        port: "",
-        pathname: "/account_images/default_profile.jpeg.twg.thumb.R640x640",
+        hostname: "**.kakaocdn.net",
       },
       {
-        protocol: "http",
-        hostname: "k.kakaocdn.net",
-        port: "",
-        pathname: "**",
+        protocol: "https",
+        hostname: "**.s3.ap-northeast-2.amazonaws.com",
       },
     ],
   },
