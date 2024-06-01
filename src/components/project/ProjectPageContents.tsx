@@ -11,7 +11,7 @@ import { getTotalProjects } from "@/lib/project/getTotalProjects";
 
 export default function ProjectPageContents() {
   const [selectedPosition, setSelectedPosition] = useState("");
-  const [selectedTechStack, setSelectedTechStack] = useState([]);
+  const [selectedTechStack, setSelectedTechStack] = useState<string[]>([]);
   const [searchKeyword, setSearchKeyword] = useState("");
   const [sortType, setSortType] = useState("RECENT");
   const [page, setPage] = useState(0);
