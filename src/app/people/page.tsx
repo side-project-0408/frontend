@@ -5,13 +5,7 @@ import Peoples from "@/components/people/Peoples";
 import SearchForm from "@/components/common/SearchForm";
 import { useRouter } from "next/navigation";
 import { FormEventHandler, useEffect, useRef, useState } from "react";
-
-const option = [
-  { key: "frontend", value: "frontend" },
-  { key: "beckend", value: "backend" },
-  { key: "designer", value: "designer" },
-  { key: "planner", value: "planner" },
-];
+import { SELECT_POSITION_OPTION } from "@/constants";
 
 type Props = {
   searchParams: {
@@ -71,7 +65,7 @@ export default function PeoplePage({ searchParams }: Props) {
         <div className="flex gap-3">
           <SelectBox
             onClick={onClickSelectBox}
-            options={option}
+            options={SELECT_POSITION_OPTION}
             title="포지션"
             optSelected={optSelected}
           />

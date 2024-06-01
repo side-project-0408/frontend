@@ -1,7 +1,6 @@
 import ProjectBox from "@/components/common/ProjectBox";
 import Link from "next/link";
 
-import { faker } from "@faker-js/faker";
 import HotPeople from "@/components/people/HotPeople";
 import { QueryClient } from "@tanstack/react-query";
 import { getHotProjects } from "../lib/project/getHotProjects";
