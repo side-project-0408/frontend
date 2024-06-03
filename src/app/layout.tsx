@@ -35,7 +35,7 @@ export default function RootLayout({
       <body className={`${inter.className} items-center bg-white`}>
         <div className="mx-auto max-w-[1200px]">
           <MSWComponent />
-          <nav className="sticky top-0 z-[9999] flex h-[80px] w-full flex-row items-center justify-center border-b-[1px] border-[#E4E4E4] bg-neutral-white-0 py-3">
+          <nav className="sticky top-0 z-[3] flex h-[80px] w-full flex-row items-center justify-center border-b-[1px] border-[#E4E4E4] bg-neutral-white-0 py-3">
             <div className="flex flex-1 flex-row items-center justify-center gap-[40px]">
               <Link href="/">
                 <Image
