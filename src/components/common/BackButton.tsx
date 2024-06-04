@@ -9,7 +9,7 @@ export default function BackButton() {
     router.back();
   };
   return (
-    <button onClick={onClickBack}>
+    <button onClick={onClickBack} className="h-[40px] w-[40px]">
       <Image src={backIcon} alt="뒤로가기 아이콘" />
     </button>
   );
