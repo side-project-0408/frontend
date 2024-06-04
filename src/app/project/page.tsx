@@ -1,6 +1,5 @@
 import ProjectPageContents from "@/components/project/ProjectPageContents";
 import { getTotalProjects } from "@/lib/project/getTotalProjects";
-import { IProjects } from "@/model/projects";
 import {
   HydrationBoundary,
   QueryClient,
