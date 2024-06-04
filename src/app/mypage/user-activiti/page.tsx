@@ -1,9 +1,5 @@
-import ProjectCard from "@/components/mypage/ProjectCard";
+import { redirect } from "next/navigation";
 
 export default function UserActivitiPage() {
-  return (
-    <div>
-      <ProjectCard />
-    </div>
-  );
+  redirect("/mypage/project-write");
 }
