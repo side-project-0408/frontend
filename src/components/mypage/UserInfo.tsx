@@ -14,12 +14,9 @@ import { IoMdCloseCircle } from "react-icons/io";
 import { FaCirclePlus } from "react-icons/fa6";
 import Select from "react-select";
 import makeAnimated from "react-select/animated";
-import {
-  QueryClient,
-  useMutation,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import AddInput from "./AddInput";
+import { getCookie } from "cookies-next";
 
 interface Option {
   readonly label: string;
@@ -62,53 +59,101 @@ const option: readonly Option[] = [
 type Props = {
   user: GetUserData;
 };
+
 type ImageFile = File | null;
 
-export default function UserInfo({
-  user,
-  user: { userFileUrl, nickName, position, content, userId, techStack },
-}: Props) {
+export default function UserInfo({ user }: Props) {
   const queryClient = useQueryClient();
+  const access_token = getCookie("access_token");
 
   const [image, setImage] = useState<ImageFile>(null);
 
-  const [product, setProduct] = useState<GetUserData>(user);
+  const {
+    alarmStatus,
+    content,
+    employmentStatus,
+    nickname,
+    userFileUrl,
+    favoriteCount,
+    viewCount,
+    softSkill,
+    techStack,
+    links,
+    position,
+    year,
+    email,
+  } = user ?? {};
+
+  const [product, setProduct] = useState<GetUserData>(user ?? {});
+
+  const [test, setTest] = useState(false);
+
+  useEffect(() => {
+    setProduct(user ?? {});
+  }, [user]);
 
   const toggleOffer = () => {
     setProduct((prev) => ({
       ...prev,
-      employmentStatus: !prev.employmentStatus,
+      alarmStatus: !prev.alarmStatus,
     }));
   };
 
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const ref = useRef<HTMLInputElement>(null);
+  const softSkillRef = useRef<HTMLInputElement>(null);
 
   const mutation = useMutation({
     mutationFn: async (e: FormEvent) => {
       e.preventDefault();
-      const updatedUser = {
-        userId: product.userId,
-        nickName: product.nickName,
-        userFileUrl: image,
-        techStack: product.techStack,
-        position: product.position,
+
+      const formData = new FormData();
+      const dto = {
+        nickname: product.nickname || nickname,
+        userFileUrl: image || userFileUrl,
+        techStack: product.techStack || techStack,
+        position: product.position || position,
         employmentStatus: product.employmentStatus,
-        year: product.year,
-        links: product.links,
-        alarmStatus: product.alarmStatus,
-        content: product.content,
-        softSkill: product.softSkill,
+        year: product.year || year,
+        links: product.links || links,
+        alarmStatus: product.alarmStatus || alarmStatus,
+        content: product.content || content,
+        softSkill: product.softSkill || softSkill,
+        email: product.email || email,
       };
-      fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/users`, {
+      formData.append(
+        "dto",
+        new Blob([JSON.stringify(dto)], { type: "application/json" }),
+      );
+      if (image) {
+        formData.append("file", image, image.name);
+      }
+
+      formData.forEach((value, key) => {
+        if (value instanceof Blob) {
+          const reader = new FileReader();
+          reader.onloadend = () => {
+            console.log(`${key}: ${reader.result}`);
+          };
+          reader.readAsText(value);
+        } else {
+          console.log(`${key}: ${value}`);
+        }
+      });
+      await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/users`, {
         method: "PATCH",
-        body: JSON.stringify(updatedUser),
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+        body: formData,
       });
     },
     onSettled(data, error, variables, context) {
       queryClient.invalidateQueries({
         queryKey: ["get", "userinfo"],
       });
+    },
+    onSuccess() {
+      alert("정보가 수정되었습니다");
     },
   });
 
@@ -119,11 +164,17 @@ export default function UserInfo({
     mutation.mutate(e);
   };
 
-  const initialTechStack = techStack.split(",").map((item) => ({
+  const initialTechStack = techStack?.split(",").map((item) => ({
     label: item,
     value: item,
   }));
 
+  const handleLinkChange = (newLinks: string[]) => {
+    setProduct((prev) => ({
+      ...prev,
+      links: newLinks.join(","),
+    }));
+  };
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement & HTMLTextAreaElement>,
   ) => {
@@ -137,7 +188,7 @@ export default function UserInfo({
   };
 
   return (
-    <form key={userId} onSubmit={handleSubmit} className="flex flex-col gap-7">
+    <form onSubmit={handleSubmit} className="mx-auto flex w-fit flex-col gap-7">
       <div className="relative flex flex-col items-center gap-2">
         <input
           type="file"
@@ -148,27 +199,31 @@ export default function UserInfo({
           className="hidden"
         />
         {image ? (
-          <Image
-            src={URL.createObjectURL(image)}
-            className="rounded-full border"
-            alt="유저이미지"
-            width={68}
-            height={68}
-          />
+          <div className="h-[100px] w-[100px]">
+            <Image
+              src={URL.createObjectURL(image)}
+              width={100}
+              height={100}
+              className="cursor-pointer rounded-full border"
+              alt="유저이미지"
+            />
+          </div>
         ) : (
-          <Image
-            className="rounded-full border"
-            src={userFileUrl}
-            alt="유저이미지"
-            width={68}
-            height={68}
-          />
+          <div className="h-[40px] w-[40px]">
+            <Image
+              className="cursor-pointer rounded-full border"
+              src={userFileUrl}
+              width={100}
+              height={100}
+              alt="유저이미지"
+            />
+          </div>
         )}
         <HiOutlinePencilSquare
           onClick={() => {
             fileInputRef.current?.click();
           }}
-          className="bg-neutral-orange-500  text-neutral-white-0 absolute bottom-0 right-[159px] rounded-full border p-1 text-[24px]"
+          className="absolute  bottom-0 right-[159px] rounded-full border bg-neutral-orange-500 p-1 text-[24px] text-neutral-white-0"
         />
       </div>
       <div className="flex flex-col gap-2">
@@ -177,10 +232,22 @@ export default function UserInfo({
         </label>
         <input
           type="text"
-          name="nickName"
-          placeholder={nickName}
+          name="nickname"
+          placeholder={nickname}
           onChange={handleChange}
-          className="placeholder:text-neutral-black-800 h-[55px] w-[400px] rounded-md border pl-[8px]"
+          className="h-[55px] w-[400px] rounded-md border pl-[8px] placeholder:text-neutral-black-800"
+        />
+      </div>
+      <div className="flex flex-col gap-2">
+        <label htmlFor="" className="text-sm font-bold">
+          이메일
+        </label>
+        <input
+          type="text"
+          name="email"
+          placeholder={email}
+          onChange={handleChange}
+          className="h-[55px] w-[400px] rounded-md border pl-[8px] placeholder:text-neutral-black-800"
         />
       </div>
       <div className="flex flex-col gap-2">
@@ -208,7 +275,7 @@ export default function UserInfo({
             setProduct((prev) => ({ ...prev, year: value }));
           }}
           options={yearOption}
-          title={user.year}
+          title={year}
           optSelected={product.year}
           width={400}
           height={50}
@@ -226,7 +293,7 @@ export default function UserInfo({
               type="radio"
               name="employment"
               value="yes"
-              defaultChecked
+              checked={product.employmentStatus === true}
               className="radio-custom"
               onChange={() => {
                 setProduct((prev) => ({ ...prev, employmentStatus: true }));
@@ -239,6 +306,7 @@ export default function UserInfo({
               type="radio"
               name="employment"
               value="no"
+              checked={product.employmentStatus === false}
               className="radio-custom"
               onChange={() => {
                 setProduct((prev) => ({ ...prev, employmentStatus: false }));
@@ -279,9 +347,9 @@ export default function UserInfo({
           소프트 스킬
         </label>
         <div className="flex flex-col gap-2">
-          {product.softSkill.split(",").map((skill, i) => (
+          {product.softSkill?.split(",").map((skill, i) => (
             <div key={`skill${i}`}>
-              <div className="bg-neutral-gray-50 flex w-fit items-center gap-2 rounded-xl border px-2 py-1">
+              <div className="flex w-fit items-center gap-2 rounded-xl border bg-neutral-gray-50 px-2 py-1">
                 <p className="text-sm">{skill}</p>
                 <IoMdCloseCircle
                   onClick={() => {
@@ -300,24 +368,25 @@ export default function UserInfo({
           <div className="relative">
             <input
               type="text"
-              className="bg-neutral-gray-50 h-[30px] w-full rounded-xl border pl-[8px] placeholder:text-sm"
+              className="h-[50px] w-full rounded-xl border bg-neutral-gray-50 pl-[8px] placeholder:text-sm"
               placeholder="소프트 스킬을 수정해 보세요."
-              ref={ref}
+              ref={softSkillRef}
             />
             <FaCirclePlus
               onClick={() => {
-                const inputValue = ref.current?.value;
+                const inputValue = softSkillRef.current?.value;
                 setProduct((prev) => ({
                   ...prev,
-                  softSkill: product.softSkill
-                    .split(",")
-                    .concat(inputValue as string)
-                    .join(","),
+                  softSkill: prev.softSkill
+                    ? prev.softSkill
+                        .split(",")
+                        .concat(inputValue as string)
+                        .join(",")
+                    : inputValue!!,
                 }));
-                // setSkillChange((prev) => [...prev, inputValue as string]);
-                ref.current!.value = "";
+                softSkillRef.current!.value = "";
               }}
-              className="absolute right-[10px] top-[7px]"
+              className="absolute right-[10px] top-[16px]"
             />
           </div>
         </div>
@@ -330,29 +399,29 @@ export default function UserInfo({
           name="content"
           onChange={handleChange}
           placeholder={content}
-          className="text-neutral-black-800 placeholder:text-neutral-black-800 h-[100px] w-[400px] rounded-md border p-[8px] placeholder:text-sm"
+          className="h-[100px] w-[400px] rounded-md border p-[8px] text-neutral-black-800 placeholder:text-sm placeholder:text-neutral-black-800"
         />
       </div>
       <div className="flex flex-col gap-2">
         <label htmlFor="link" className="text-sm font-bold">
           링크
         </label>
-        <AddInput linkUrls={product.links} setProduct={setProduct} />
+        <AddInput linkUrls={links} setLink={handleLinkChange} />
       </div>
       <div className="mt-[22px] flex items-center gap-6">
-        <label htmlFor="employmentStatus" className="text-sm font-bold">
+        <label htmlFor="alarmStatus" className="text-sm font-bold">
           제안 받기
         </label>
         <button
           onClick={toggleOffer}
-          className={`relative h-[26px] w-[72px] rounded-md border p-2 hover:shadow-md ${product.employmentStatus ? "bg-neutral-orange-500" : "bg-neutral-white-0"}`}
+          className={`relative h-[26px] w-[72px] rounded-md border p-2 hover:shadow-md ${product.alarmStatus ? "bg-neutral-orange-500" : "bg-neutral-white-0"}`}
         >
           <div
-            className={` absolute left-[1px] top-[-1px] z-[1] h-[26px] w-[34px] rounded-lg transition-transform ${product.employmentStatus ? " bg-neutral-white-0 translate-x-[35px]" : "bg-neutral-gray-50 translate-x-0"}`}
+            className={` absolute left-[1px] top-[-1px] z-[1] h-[26px] w-[34px] rounded-lg transition-transform ${product.alarmStatus ? " translate-x-[35px] bg-neutral-white-0" : "translate-x-0 bg-neutral-gray-50"}`}
           />
           <div className="absolute left-[9px] top-[5px] flex gap-[12px]">
             <span
-              className={`text-xs ${product.employmentStatus && "text-neutral-white-0"} font-medium`}
+              className={`text-xs ${product.alarmStatus && "text-neutral-white-0"} font-medium`}
             >
               ON
             </span>
@@ -362,7 +431,7 @@ export default function UserInfo({
       </div>
       <button
         type="submit"
-        className="bg-neutral-orange-500 text-neutral-white-0 h-[55px] rounded-2xl border font-bold"
+        className="h-[55px] rounded-2xl border bg-neutral-orange-500 font-bold text-neutral-white-0"
       >
         프로필 저장
       </button>
