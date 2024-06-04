@@ -102,7 +102,7 @@ export default function ProjectPageContents() {
           onClick={() => {
             setPage((old) => old + 1);
           }}
-          // disabled={!projects?.hasMore}
+          disabled={page + 1 === projects?.totalPages}
         >
           Next
         </button>
