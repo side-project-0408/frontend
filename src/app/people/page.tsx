@@ -7,10 +7,13 @@ import { useRouter } from "next/navigation";
 import { FormEventHandler, useEffect, useRef, useState } from "react";
 
 const option = [
-  { key: "frontend", value: "frontend" },
-  { key: "beckend", value: "backend" },
-  { key: "designer", value: "designer" },
-  { key: "planner", value: "planner" },
+  { id: 1, value: "frontend" },
+  { id: 2, value: "backend" },
+  { id: 3, value: "designer" },
+  { id: 4, value: "pm" },
+  { id: 5, value: "ios" },
+  { id: 6, value: "android" },
+  { id: 7, value: "devops" },
 ];
 
 type Props = {
@@ -20,7 +23,7 @@ type Props = {
     sort?: string;
     keyword?: string;
     position?: string;
-    teckStack?: string;
+    techStack?: string;
   };
 };
 
@@ -56,7 +59,7 @@ export default function PeoplePage({ searchParams }: Props) {
 
   //기술스택 쿼리파람즈 추가
   useEffect(() => {
-    changeSearchParams("teckStack", selectedStack.join(","));
+    changeSearchParams("techStack", selectedStack.join(","));
   }, [selectedStack]);
 
   return (
