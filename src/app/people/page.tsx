@@ -6,6 +6,7 @@ import SearchForm from "@/components/common/SearchForm";
 import { useRouter } from "next/navigation";
 import { FormEventHandler, useEffect, useRef, useState } from "react";
 import { SELECT_POSITION_OPTION } from "@/constants";
+import { convertPositionKorToEng } from "@/lib/convertPositionKrToEng";
 
 type Props = {
   searchParams: {
@@ -14,7 +15,7 @@ type Props = {
     sort?: string;
     keyword?: string;
     position?: string;
-    teckStack?: string;
+    techStack?: string;
   };
 };
 
@@ -38,7 +39,7 @@ export default function PeoplePage({ searchParams }: Props) {
 
   const onClickSelectBox = (value: string) => {
     setOptSelected(value);
-    changeSearchParams("position", value);
+    changeSearchParams("position", convertPositionKorToEng(value));
   };
 
   const onSubmitSearch: FormEventHandler<HTMLFormElement> = (event) => {
@@ -50,7 +51,7 @@ export default function PeoplePage({ searchParams }: Props) {
 
   //기술스택 쿼리파람즈 추가
   useEffect(() => {
-    changeSearchParams("teckStack", selectedStack.join(","));
+    changeSearchParams("techStack", selectedStack.join(","));
   }, [selectedStack]);
 
   return (
@@ -68,6 +69,7 @@ export default function PeoplePage({ searchParams }: Props) {
             options={SELECT_POSITION_OPTION}
             title="포지션"
             optSelected={optSelected}
+            className="rounded-2xl"
           />
           <SelectStack
             optSelected={selectedStack}

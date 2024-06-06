@@ -2,20 +2,18 @@ import getLikePeoples from "@/lib/people/getLikePeoples";
 import { GetPeoples } from "@/model/peoples";
 import { useQuery } from "@tanstack/react-query";
 import PeopleContentBox from "./PeopleContentBox";
+import { getCookie } from "cookies-next";
 
-type Props = {
-  searchParams: {
-    page: number;
-    size: number;
-    sort: string;
-  };
-};
 export default function LikePeople() {
-  const { data: likePeopleList } = useQuery<GetPeoples>({
-    queryKey: ["get", "likepeoples"],
+  const access_token = getCookie("access_token") as string;
+  const { data: likePeopleList } = useQuery<
+    GetPeoples,
+    Error,
+    GetPeoples,
+    [string, string, string]
+  >({
+    queryKey: ["get", "likepeoples", access_token],
     queryFn: getLikePeoples,
-    staleTime: 60 * 1000, // fresh -> stale, 5분이라는 기준
-    gcTime: 300 * 1000,
   });
   return (
     <div>

@@ -11,17 +11,17 @@ import fillHeartIcon from "../../../public/image/fillHeart.svg";
 import eyeIcon from "../../../public/image/eye.svg";
 import TechStack from "../common/TechStack";
 import Link from "next/link";
-import { MouseEventHandler, useEffect, useState } from "react";
-import LikePeople from "./LikePeople";
+import { MouseEventHandler } from "react";
 import getLikePeoples from "@/lib/people/getLikePeoples";
+import { getCookie } from "cookies-next";
 
 type Props = {
   userId: string;
 };
 
-// 추후에 백엔드 데이터 넣었을때 직접 데이터를 가공하지않고 쿼리키를 가져온뒤 버튼 컬러 조정해야함
-
 export default function PeoplePosts({ userId }: Props) {
+  const access_token = getCookie("access_token") as string;
+
   const { data } = useQuery<
     GetPeoplePost,
     Object,
@@ -30,13 +30,6 @@ export default function PeoplePosts({ userId }: Props) {
   >({
     queryKey: ["get", "peoplesDetail", userId],
     queryFn: getPeopleDetail,
-  });
-
-  const { data: likePeopleList } = useQuery<GetPeoples>({
-    queryKey: ["get", "likepeoples"],
-    queryFn: getLikePeoples,
-    staleTime: 60 * 1000, // fresh -> stale, 5분이라는 기준
-    gcTime: 300 * 1000,
   });
 
   const {
@@ -55,66 +48,59 @@ export default function PeoplePosts({ userId }: Props) {
 
   const queryClient = useQueryClient();
 
-  const likeQuery = queryClient.getQueryData<GetPeoples>([
-    "get",
-    "likepeoples",
-  ]);
-  console.log("likeQuery", likeQuery);
+  const { data: likeQuery } = useQuery<
+    GetPeoples,
+    Error,
+    GetPeoples,
+    [string, string, string]
+  >({
+    queryKey: ["get", "likepeoples", access_token],
+    queryFn: getLikePeoples,
+  });
 
   const liked = !!likeQuery?.data.find(
     (item) => item.userId === Number(userId),
   );
 
-  console.log("liked", liked);
-
   const like = useMutation({
     mutationFn: (userId: string) => {
       return fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/users/favorite/${userId}`,
+        `${process.env.NEXT_PUBLIC_BASE_URL}/users/favorite?favoriteId=${userId}`,
         {
           method: "post",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${access_token}`,
+          },
         },
       );
     },
-    onMutate(userId: string) {
-      const oldData = queryClient.getQueryData<GetPeoples>([
-        "get",
-        "likepeoples",
-      ]);
-      if (oldData) {
-        const newData = {
-          ...oldData,
-          data: oldData.data.map((item) => ({
-            ...item,
-            userId: Number(userId),
-          })),
-        };
-        queryClient.setQueryData(["get", "likepeoples"], newData);
-      }
+    onSuccess() {
+      queryClient.invalidateQueries({
+        queryKey: ["get", "likepeoples", access_token],
+      });
+      alert("찜하기 성공");
     },
   });
 
   const unLike = useMutation({
     mutationFn: (userId: string) => {
       return fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/users/favorite/${userId}`,
+        `${process.env.NEXT_PUBLIC_BASE_URL}/users/favorite?favoriteId=${userId}`,
         {
           method: "delete",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${access_token}`,
+          },
         },
       );
     },
-    onMutate(userId: string) {
-      const oldData = queryClient.getQueryData<GetPeoples>([
-        "get",
-        "likepeoples",
-      ]);
-      if (oldData) {
-        const deleteData = {
-          ...oldData,
-          data: oldData.data.filter((item) => item.userId !== Number(userId)),
-        };
-        queryClient.setQueryData(["get", "likepeoples"], deleteData);
-      }
+    onSuccess() {
+      queryClient.invalidateQueries({
+        queryKey: ["get", "likepeoples", access_token],
+      });
+      alert("찜하기 삭제 완료");
     },
   });
 
@@ -127,19 +113,44 @@ export default function PeoplePosts({ userId }: Props) {
     }
   };
 
+  const proposal = useMutation({
+    mutationFn: (userId: string) => {
+      return fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/proposal/send/${userId}`,
+        {
+          method: "post",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${access_token}`,
+          },
+        },
+      );
+    },
+    onSuccess() {
+      alert("제안이 전송되었습니다 !");
+    },
+  });
+
+  const onProposal: MouseEventHandler<HTMLButtonElement> = (e) => {
+    e.preventDefault();
+    proposal.mutate(userId);
+  };
+
   return (
     <>
       {data && (
         <div className="flex flex-col">
           <div className="flex flex-col gap-4 border-b pb-10">
             <div className="flex items-center gap-[10px]">
-              <Image
-                className="rounded-full border"
-                src={`${userFileUrl}`}
-                alt="유저프로필"
-                width={30}
-                height={30}
-              />
+              <div className="h-[60px] w-[60px]">
+                <Image
+                  className="rounded-full border"
+                  src={`${userFileUrl}`}
+                  alt="유저프로필"
+                  width={60}
+                  height={60}
+                />
+              </div>
               <h1 className="text-[32px] font-bold">{nickname}</h1>
               <div>
                 <BlueTextBox textSize="12px" textToShow={`${position}`} />
@@ -185,7 +196,8 @@ export default function PeoplePosts({ userId }: Props) {
           <div className="mt-[60px] flex gap-[13px] self-center">
             <button
               className={`h-[58px] w-[142px] rounded-md font-bold ${alarmStatus ? "bg-neutral-orange-500 text-neutral-white-0" : "bg-neutral-gray-50 text-neutral-black-800"}`}
-              disabled={alarmStatus}
+              disabled={!alarmStatus}
+              onClick={onProposal}
             >
               {alarmStatus ? "제안하기" : "제안불가"}
             </button>

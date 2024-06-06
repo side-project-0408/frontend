@@ -12,7 +12,7 @@ export const getPeoples: QueryFunction<
       sort?: string;
       keyword?: string;
       position?: string;
-      teckStack?: string;
+      techStack?: string;
     },
   ]
 > = async ({ queryKey }) => {
@@ -38,7 +38,7 @@ export const getPeoples: QueryFunction<
     `${process.env.NEXT_PUBLIC_BASE_URL}/peoples?${queryParams.toString()}`,
     {
       next: {
-        tags: ["get", "peoples", searchParams.page || "1"],
+        tags: ["get", "peoples", searchParams.page || "0"],
       },
       cache: "no-store",
     },
