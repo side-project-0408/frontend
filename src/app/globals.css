@@ -7,3 +7,21 @@
   grid-template-columns: 150px 1fr;
   align-items: center;
 }
+
+.mypage-tab {
+  display: grid;
+  grid-template-columns: 150px 1fr;
+  justify-content: center;
+}
+
+.radio-custom {
+  appearance: none;
+  border: max(2px, 0.1em) solid gray;
+  border-radius: 50%;
+  width: 1.25em;
+  height: 1.25em;
+}
+
+.radio-custom:checked {
+  border: 0.4em solid #ff800b;
+}

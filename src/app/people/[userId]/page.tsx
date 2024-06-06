@@ -24,7 +24,7 @@ export default async function PeopleDetailPage({ params }: Props) {
   const dehydratedState = dehydrate(queryClient);
 
   return (
-    <div className="w-full">
+    <div className="flex w-full flex-col gap-[20px]">
       <HydrationBoundary state={dehydratedState}>
         <BackButton />
         <PeoplePosts userId={userId} />

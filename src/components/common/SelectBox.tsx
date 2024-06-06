@@ -1,16 +1,17 @@
 "use client";
-import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { IoIosArrowDown } from "react-icons/io";
-
+import convertPositionEngToKor from "@/lib/convertPositionEngToKor";
 export type Props = {
   height?: number;
   width?: number;
   title: string;
   onClick: (optionValue: string) => void;
   optSelected: string;
-  options: { key: string; value: string }[];
+  options: { id: number; value: string }[];
+  className?: string;
 };
+
 const SelectBox = ({
   height = 40,
   width = 129,
@@ -18,6 +19,7 @@ const SelectBox = ({
   optSelected,
   title,
   onClick,
+  className,
 }: Props) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
@@ -27,13 +29,13 @@ const SelectBox = ({
 
   return (
     <div
-      className={`w-[${width}px] h-[${height}px] relative cursor-pointer rounded-2xl border`}
+      className={`w-[${width}px] h-[${height}px] relative cursor-pointer border ${className}`}
       onClick={ToggleHandler}
       tabIndex={0}
       onFocus={() => setIsOpen(true)}
       onBlur={() => setIsOpen(false)}
     >
-      <div className="absolute top-[50%] flex w-full -translate-y-1/2 transform items-center justify-around">
+      <div className="absolute top-[50%] flex w-full -translate-y-1/2 transform items-center justify-between px-[10px]">
         {optSelected ? <span>{optSelected}</span> : <span>{title}</span>}
         <IoIosArrowDown />
       </div>
@@ -42,14 +44,14 @@ const SelectBox = ({
           <ul
             className={`absolute top-[42px] z-[1] w-[${width}px] rounded-xl border bg-neutral-white-0`}
           >
-            {options?.map((option, i) => {
+            {options?.map((option) => {
               return (
                 <li
-                  key={`option${i}`}
+                  key={option.id}
                   className="px-3 py-2 font-bold hover:text-orange-500"
-                  onClick={() => onClick(option.value)}
+                  onClick={() => onClick(convertPositionEngToKor(option.value))}
                 >
-                  {option.value}
+                  {convertPositionEngToKor(option.value)}
                 </li>
               );
             })}

@@ -14,7 +14,7 @@ type Props = {
     sort?: string;
     keyword?: string;
     position?: string;
-    teckStack?: string;
+    techStack?: string;
   };
 };
 
@@ -50,7 +50,7 @@ export default function PeoplePage({ searchParams }: Props) {
 
   //기술스택 쿼리파람즈 추가
   useEffect(() => {
-    changeSearchParams("teckStack", selectedStack.join(","));
+    changeSearchParams("techStack", selectedStack.join(","));
   }, [selectedStack]);
 
   return (
@@ -68,6 +68,7 @@ export default function PeoplePage({ searchParams }: Props) {
             options={SELECT_POSITION_OPTION}
             title="포지션"
             optSelected={optSelected}
+            className="rounded-2xl"
           />
           <SelectStack
             optSelected={selectedStack}
