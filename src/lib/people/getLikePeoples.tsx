@@ -1,15 +1,29 @@
-import { GetPeoples } from "@/model/peoples";
-import { QueryFunction } from "@tanstack/query-core";
+import { QueryFunctionContext } from "@tanstack/react-query";
 
-export const getLikePeoples = async () => {
+export const getLikePeoples = async ({
+  queryKey,
+}: QueryFunctionContext<[string, string, string]>) => {
+  const [, , access_token] = queryKey;
+
+  const defaultParams = {
+    page: "0",
+    size: "10",
+    sort: "createdAt",
+  };
+
+  const queryParams = new URLSearchParams(defaultParams).toString();
+
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/users/favorite`,
+    `${process.env.NEXT_PUBLIC_BASE_URL}/users/favorite?${queryParams}`,
     {
       next: {
-        tags: ["get", "likepeoples"],
+        tags: ["get", "likepeoples", defaultParams.page],
       },
-      //캐시 해제
       cache: "no-store",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${access_token}`,
+      },
     },
   );
   if (!res.ok) {
