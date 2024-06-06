@@ -17,6 +17,7 @@ import makeAnimated from "react-select/animated";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import AddInput from "./AddInput";
 import { getCookie } from "cookies-next";
+import { useRouter } from "next/navigation";
 
 interface Option {
   readonly label: string;
@@ -86,9 +87,13 @@ type ImageFile = File | null;
 export default function UserInfo({ user }: Props) {
   const queryClient = useQueryClient();
   const access_token = getCookie("access_token");
+  const router = useRouter();
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const softSkillRef = useRef<HTMLInputElement>(null);
 
   const [image, setImage] = useState<ImageFile>(null);
-
+  const [errorMessage, setErrorMessage] = useState(false);
   const {
     alarmStatus,
     content,
@@ -104,8 +109,13 @@ export default function UserInfo({ user }: Props) {
     year,
     email,
   } = user ?? {};
+  const [selectKey, setSelectKey] = useState(0);
 
   const [product, setProduct] = useState<GetUserData>(user ?? {});
+
+  useEffect(() => {
+    setSelectKey((prevKey) => prevKey + 1);
+  }, [techStack]);
 
   useEffect(() => {
     setProduct(user ?? {});
@@ -117,9 +127,6 @@ export default function UserInfo({ user }: Props) {
       alarmStatus: !prev.alarmStatus,
     }));
   };
-
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const softSkillRef = useRef<HTMLInputElement>(null);
 
   const mutation = useMutation({
     mutationFn: async (e: FormEvent) => {
@@ -161,7 +168,7 @@ export default function UserInfo({ user }: Props) {
       });
     },
     onSuccess() {
-      alert("정보가 수정되었습니다");
+      router.push("/mypage/user-info/alert");
     },
   });
 
@@ -169,7 +176,11 @@ export default function UserInfo({ user }: Props) {
 
   const handleSubmit: FormEventHandler = (e) => {
     e.preventDefault();
-    mutation.mutate(e);
+    if (!product.position || !product.techStack || !product.softSkill) {
+      setErrorMessage(true);
+    } else {
+      mutation.mutate(e);
+    }
   };
 
   const initialTechStack = techStack?.split(",").map((item) => ({
@@ -183,6 +194,7 @@ export default function UserInfo({ user }: Props) {
       links: newLinks.join(","),
     }));
   };
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement & HTMLTextAreaElement>,
   ) => {
@@ -328,6 +340,8 @@ export default function UserInfo({ user }: Props) {
           기술스택
         </label>
         <Select
+          instanceId="techStack"
+          key={selectKey} // Force re-render by changing key
           defaultValue={initialTechStack}
           options={option}
           components={animatedComponents}
@@ -437,6 +451,9 @@ export default function UserInfo({ user }: Props) {
           </div>
         </button>
       </div>
+      {errorMessage && (
+        <p className="text-[red]">기술스택 직무 소프트스킬은 필수값입니다.</p>
+      )}
       <button
         type="submit"
         className="h-[55px] rounded-2xl border bg-neutral-orange-500 font-bold text-neutral-white-0"
