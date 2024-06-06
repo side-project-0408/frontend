@@ -3,8 +3,7 @@ import { GetProjects } from "@/model/projects";
 import { useQuery } from "@tanstack/react-query";
 import { getCookie } from "cookies-next";
 import ProjectBox from "../common/ProjectBox";
-import logo from "../../../public/logo.png";
-import Image from "next/image";
+import NoDataAlert from "../common/NoDataAlert";
 
 export default function ProjectCard() {
   const access_token = getCookie("access_token") as string;
@@ -23,10 +22,9 @@ export default function ProjectCard() {
   return (
     <div className="flex flex-wrap gap-6">
       {data?.data.length === 0 ? (
-        <div className="flex h-[300px] w-full flex-col items-center justify-center gap-[20px]">
-          <Image src={logo} alt="로고" width={80} />
-          <p>아직 작성한 프로젝트가 없습니다.</p>
-        </div>
+        <NoDataAlert>
+          <p>찜한 프로젝트가 없습니다.</p>
+        </NoDataAlert>
       ) : (
         <>{data?.data.map((project) => <ProjectBox project={project} />)}</>
       )}
