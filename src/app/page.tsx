@@ -1,95 +1,29 @@
 import ProjectBox from "@/components/common/ProjectBox";
 import Link from "next/link";
 
-import { faker } from "@faker-js/faker";
 import HotPeople from "@/components/people/HotPeople";
+import { QueryClient } from "@tanstack/react-query";
+import { getHotProjects } from "../lib/project/getHotProjects";
+import { IProjects } from "@/model/projects";
 
 type Props = {
   searchParams: {
     size: string;
   };
 };
-export default function Home({ searchParams }: Props) {
-  const DUMMY_HOT_PROJECT = [
-    {
-      projectId: faker.number.int(),
-      nickname: faker.person.fullName(),
-      userFileUrl: faker.image.avatar(),
-      title: faker.lorem.sentences(),
-      techStack: "react, java, nextjs, spring, express",
-      position: "frontend, backend, designer, pm",
-      deadLine: `2024-${faker.number.int({ min: 1, max: 12 }).toString().padStart(2, "0")}-${faker.number.int({ min: 1, max: 30 }).toString().padStart(2, "0")}`,
-      viewCount: faker.number.int(),
-      favoriteCount: faker.number.int(),
-      createdAt: "2024-01-29T19:43:45.58666",
-      recent: false,
-    },
-    {
-      projectId: faker.number.int(),
-      nickname: faker.person.fullName(),
-      userFileUrl: faker.image.avatar(),
-      title: faker.lorem.sentences(),
-      techStack: "react, java, nextjs, spring, express",
-      position: "frontend, backend, designer, pm",
-      deadLine: `2024-${faker.number.int({ min: 1, max: 12 }).toString().padStart(2, "0")}-${faker.number.int({ min: 1, max: 30 }).toString().padStart(2, "0")}`,
-      viewCount: faker.number.int(),
-      favoriteCount: faker.number.int(),
-      createdAt: "2024-03-29T19:43:45.58666",
-      recent: true,
-    },
-    {
-      projectId: faker.number.int(),
-      nickname: faker.person.fullName(),
-      userFileUrl: faker.image.avatar(),
-      title: faker.lorem.sentences(),
-      techStack: "react, java, nextjs, spring, express",
-      position: "frontend, backend, designer, pm",
-      deadLine: `2024-${faker.number.int({ min: 1, max: 12 }).toString().padStart(2, "0")}-${faker.number.int({ min: 1, max: 30 }).toString().padStart(2, "0")}`,
-      viewCount: faker.number.int(),
-      favoriteCount: faker.number.int(),
-      createdAt: "2024-04-19T19:43:45.58666",
-      recent: true,
-    },
-    {
-      projectId: faker.number.int(),
-      nickname: faker.person.fullName(),
-      userFileUrl: faker.image.avatar(),
-      title: faker.lorem.sentences(),
-      techStack: "react, java, nextjs, spring, express",
-      position: "frontend, backend, designer, pm",
-      deadLine: `2024-${faker.number.int({ min: 1, max: 12 }).toString().padStart(2, "0")}-${faker.number.int({ min: 1, max: 30 }).toString().padStart(2, "0")}`,
-      viewCount: faker.number.int(),
-      favoriteCount: faker.number.int(),
-      createdAt: "2024-02-29T19:43:45.58666",
-      recent: false,
-    },
-    {
-      projectId: faker.number.int(),
-      nickname: faker.person.fullName(),
-      userFileUrl: faker.image.avatar(),
-      title: faker.lorem.sentences(),
-      techStack: "react, java, nextjs, spring, express",
-      position: "frontend, backend, designer, pm",
-      deadLine: `2024-${faker.number.int({ min: 1, max: 12 }).toString().padStart(2, "0")}-${faker.number.int({ min: 1, max: 30 }).toString().padStart(2, "0")}`,
-      viewCount: faker.number.int(),
-      favoriteCount: faker.number.int(),
-      createdAt: "2024-04-20T19:43:45.58666",
-      recent: true,
-    },
-    {
-      projectId: faker.number.int(),
-      nickname: faker.person.fullName(),
-      userFileUrl: faker.image.avatar(),
-      title: faker.lorem.sentences(),
-      techStack: "react, java, nextjs, spring, express",
-      position: "frontend, backend, designer, pm",
-      deadLine: `2024-${faker.number.int({ min: 1, max: 12 }).toString().padStart(2, "0")}-${faker.number.int({ min: 1, max: 30 }).toString().padStart(2, "0")}`,
-      viewCount: faker.number.int(),
-      favoriteCount: faker.number.int(),
-      createdAt: "2024-08-29T19:43:45.58666",
-      recent: true,
-    },
-  ];
+
+export default async function Home({ searchParams }: Props) {
+  const queryClient = new QueryClient();
+
+  await queryClient.prefetchQuery({
+    queryKey: ["project", "hot"],
+    queryFn: getHotProjects,
+  });
+
+  const hotProjectsResp: IProjects | undefined = queryClient.getQueryData([
+    "project",
+    "hot",
+  ]);
 
   return (
     <main className="flex h-auto flex-col gap-[20px]">
@@ -112,7 +46,7 @@ export default function Home({ searchParams }: Props) {
             <Link href="/project">전체보기</Link>
           </div>
           <div className="flex flex-wrap gap-[9px]">
-            {[...DUMMY_HOT_PROJECT]
+            {hotProjectsResp?.data
               .sort((a, b) => +new Date(b.createdAt) - +new Date(a.createdAt))
               .map((project, i) => {
                 return <ProjectBox key={`hotProject${i}`} project={project} />;

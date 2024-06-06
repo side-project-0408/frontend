@@ -4,15 +4,11 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: "http",
-        hostname: "**",
-        port: "",
-        pathname: "**",
+        hostname: "**.kakaocdn.net",
       },
       {
         protocol: "https",
-        hostname: "**",
-        port: "",
-        pathname: "**",
+        hostname: "**.s3.ap-northeast-2.amazonaws.com",
       },
     ],
   },
