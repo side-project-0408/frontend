@@ -10,9 +10,7 @@ export default function MyPageLayout({ children }: Props) {
       <nav className="flex flex-col gap-4">
         <MypageNav />
       </nav>
-      <section>
-        <div>{children}</div>
-      </section>
+      <>{children}</>
     </div>
   );
 }

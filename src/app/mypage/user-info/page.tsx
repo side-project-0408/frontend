@@ -3,14 +3,19 @@ import UserInfo from "@/components/mypage/UserInfo";
 import getUserInfo from "@/lib/mypage/getUserInfo";
 import { GetUsers } from "@/model/userInfo";
 import { useQuery } from "@tanstack/react-query";
+import { getCookie } from "cookies-next";
 
 export default function UserInfoPage() {
-  const { data } = useQuery<GetUsers>({
-    queryKey: ["get", "userinfo"],
+  const access_token = getCookie("access_token") as string;
+
+  const { data: user } = useQuery<
+    GetUsers,
+    Error,
+    GetUsers,
+    [string, string, string]
+  >({
+    queryKey: ["get", "userinfo", access_token],
     queryFn: getUserInfo,
   });
-
-  return (
-    <>{data?.data.map((user) => <UserInfo user={user} key={user.userId} />)}</>
-  );
+  return <UserInfo user={user?.data!!} />;
 }
