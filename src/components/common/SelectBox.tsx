@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { IoIosArrowDown } from "react-icons/io";
-
+import convertPositionEngToKor from "@/lib/convertPositionEngToKor";
 export type Props = {
   height?: number;
   width?: number;
@@ -11,6 +11,7 @@ export type Props = {
   options: { id: number; value: string }[];
   className?: string;
 };
+
 const SelectBox = ({
   height = 40,
   width = 129,
@@ -48,9 +49,9 @@ const SelectBox = ({
                 <li
                   key={option.id}
                   className="px-3 py-2 font-bold hover:text-orange-500"
-                  onClick={() => onClick(option.value)}
+                  onClick={() => onClick(convertPositionEngToKor(option.value))}
                 >
-                  {option.value}
+                  {convertPositionEngToKor(option.value)}
                 </li>
               );
             })}
