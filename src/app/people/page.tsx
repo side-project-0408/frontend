@@ -6,6 +6,7 @@ import SearchForm from "@/components/common/SearchForm";
 import { useRouter } from "next/navigation";
 import { FormEventHandler, useEffect, useRef, useState } from "react";
 import { SELECT_POSITION_OPTION } from "@/constants";
+import { convertPositionKorToEng } from "@/lib/convertPositionKrToEng";
 
 type Props = {
   searchParams: {
@@ -38,7 +39,7 @@ export default function PeoplePage({ searchParams }: Props) {
 
   const onClickSelectBox = (value: string) => {
     setOptSelected(value);
-    changeSearchParams("position", value);
+    changeSearchParams("position", convertPositionKorToEng(value));
   };
 
   const onSubmitSearch: FormEventHandler<HTMLFormElement> = (event) => {
