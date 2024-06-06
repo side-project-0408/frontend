@@ -24,36 +24,57 @@ interface Option {
 }
 
 const positionOption = [
-  { id: 1, value: "프론트엔드" },
-  { id: 2, value: "백엔드" },
-  { id: 3, value: "디자이너" },
-  { id: 4, value: "IOS" },
-  { id: 5, value: "안드로이드" },
-  { id: 6, value: "데브옵스" },
-  { id: 7, value: "PM" },
-  { id: 8, value: "기획자" },
+  { id: 1, value: "frontend" },
+  { id: 2, value: "backend" },
+  { id: 3, value: "designer" },
+  { id: 4, value: "ios" },
+  { id: 5, value: "android" },
+  { id: 6, value: "devops" },
+  { id: 7, value: "pm" },
 ];
 
 const yearOption = [
-  { id: 1, value: "0년" },
-  { id: 2, value: "1년" },
-  { id: 3, value: "2년" },
-  { id: 4, value: "3년" },
-  { id: 5, value: "4년" },
-  { id: 6, value: "5년" },
-  { id: 7, value: "6년" },
+  { id: 1, value: "0" },
+  { id: 2, value: "1" },
+  { id: 3, value: "2" },
+  { id: 4, value: "3" },
+  { id: 5, value: "4" },
+  { id: 6, value: "5" },
+  { id: 7, value: "6" },
 ];
 const option: readonly Option[] = [
-  { label: "React", value: "React" },
-  { label: "TypeScript", value: "TypeScript" },
-  { label: "JavaScript", value: "JavaScript" },
-  { label: "Vue", value: "Vue" },
-  { label: "Nextjs", value: "Nextjs" },
-  { label: "Nodejs", value: "Nodejs" },
-  { label: "Java", value: "Java" },
-  { label: "Spring", value: "Spring" },
-  { label: "Kotlin", value: "Kotlin" },
-  { label: "Nestjs", value: "Nestjs" },
+  { label: "React", value: "react" },
+  { label: "TypeScript", value: "typescript" },
+  { label: "JavaScript", value: "javascript" },
+  { label: "Vue", value: "vue" },
+  { label: "Svelte", value: "svelte" },
+  { label: "Nextjs", value: "nextjs" },
+  { label: "Java", value: "java" },
+  { label: "Spring", value: "spring" },
+  { label: "Nodejs", value: "nodejs" },
+  { label: "Nestjs", value: "nestjs" },
+  { label: "Go", value: "go" },
+  { label: "Kotlin", value: "kotlin" },
+  { label: "Express", value: "express" },
+  { label: "MySQL", value: "mysql" },
+  { label: "MongoDB", value: "mongodb" },
+  { label: "Python", value: "python" },
+  { label: "Diango", value: "Diango" },
+  { label: "php", value: "php" },
+  { label: "GraphQL", value: "graphql" },
+  { label: "Firebase", value: "firebase" },
+  { label: "Flutter", value: "flutter" },
+  { label: "Swift", value: "swift" },
+  { label: "Kotlin", value: "kotlin" },
+  { label: "ReactNative", value: "reactnative" },
+  { label: "Unity", value: "unity" },
+  { label: "AWS", value: "aws" },
+  { label: "Kubernetes", value: "kubernetes" },
+  { label: "Docker", value: "docker" },
+  { label: "Git", value: "git" },
+  { label: "Figma", value: "figma" },
+  { label: "Zeplin", value: "zeplin" },
+  { label: "Jest", value: "jest" },
 ];
 
 type Props = {
@@ -85,8 +106,6 @@ export default function UserInfo({ user }: Props) {
   } = user ?? {};
 
   const [product, setProduct] = useState<GetUserData>(user ?? {});
-
-  const [test, setTest] = useState(false);
 
   useEffect(() => {
     setProduct(user ?? {});
@@ -128,17 +147,6 @@ export default function UserInfo({ user }: Props) {
         formData.append("file", image, image.name);
       }
 
-      formData.forEach((value, key) => {
-        if (value instanceof Blob) {
-          const reader = new FileReader();
-          reader.onloadend = () => {
-            console.log(`${key}: ${reader.result}`);
-          };
-          reader.readAsText(value);
-        } else {
-          console.log(`${key}: ${value}`);
-        }
-      });
       await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/users`, {
         method: "PATCH",
         headers: {
@@ -209,7 +217,7 @@ export default function UserInfo({ user }: Props) {
             />
           </div>
         ) : (
-          <div className="h-[40px] w-[40px]">
+          <div className="h-[100px] w-[100px]">
             <Image
               className="cursor-pointer rounded-full border"
               src={userFileUrl}
