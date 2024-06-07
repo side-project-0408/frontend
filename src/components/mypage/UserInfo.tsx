@@ -4,6 +4,7 @@ import Image from "next/image";
 import {
   FormEvent,
   FormEventHandler,
+  MouseEventHandler,
   useEffect,
   useRef,
   useState,
@@ -18,65 +19,11 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import AddInput from "./AddInput";
 import { getCookie } from "cookies-next";
 import { useRouter } from "next/navigation";
-
-interface Option {
-  readonly label: string;
-  readonly value: string;
-}
-
-const positionOption = [
-  { id: 1, value: "frontend" },
-  { id: 2, value: "backend" },
-  { id: 3, value: "designer" },
-  { id: 4, value: "ios" },
-  { id: 5, value: "android" },
-  { id: 6, value: "devops" },
-  { id: 7, value: "pm" },
-];
-
-const yearOption = [
-  { id: 1, value: "0" },
-  { id: 2, value: "1" },
-  { id: 3, value: "2" },
-  { id: 4, value: "3" },
-  { id: 5, value: "4" },
-  { id: 6, value: "5" },
-  { id: 7, value: "6" },
-];
-const option: readonly Option[] = [
-  { label: "React", value: "react" },
-  { label: "TypeScript", value: "typescript" },
-  { label: "JavaScript", value: "javascript" },
-  { label: "Vue", value: "vue" },
-  { label: "Svelte", value: "svelte" },
-  { label: "Nextjs", value: "nextjs" },
-  { label: "Java", value: "java" },
-  { label: "Spring", value: "spring" },
-  { label: "Nodejs", value: "nodejs" },
-  { label: "Nestjs", value: "nestjs" },
-  { label: "Go", value: "go" },
-  { label: "Kotlin", value: "kotlin" },
-  { label: "Express", value: "express" },
-  { label: "MySQL", value: "mysql" },
-  { label: "MongoDB", value: "mongodb" },
-  { label: "Python", value: "python" },
-  { label: "Diango", value: "Diango" },
-  { label: "php", value: "php" },
-  { label: "GraphQL", value: "graphql" },
-  { label: "Firebase", value: "firebase" },
-  { label: "Flutter", value: "flutter" },
-  { label: "Swift", value: "swift" },
-  { label: "Kotlin", value: "kotlin" },
-  { label: "ReactNative", value: "reactnative" },
-  { label: "Unity", value: "unity" },
-  { label: "AWS", value: "aws" },
-  { label: "Kubernetes", value: "kubernetes" },
-  { label: "Docker", value: "docker" },
-  { label: "Git", value: "git" },
-  { label: "Figma", value: "figma" },
-  { label: "Zeplin", value: "zeplin" },
-  { label: "Jest", value: "jest" },
-];
+import {
+  SELECT_OPTION,
+  SELECT_POSITION_OPTION,
+  YEAR_OPTION,
+} from "@/constants";
 
 type Props = {
   user: GetUserData;
@@ -275,7 +222,7 @@ export default function UserInfo({ user }: Props) {
           직무
         </label>
         <SelectBox
-          options={positionOption}
+          options={SELECT_POSITION_OPTION}
           optSelected={product.position}
           title={position}
           onClick={(value) => {
@@ -294,7 +241,7 @@ export default function UserInfo({ user }: Props) {
           onClick={(value) => {
             setProduct((prev) => ({ ...prev, year: value }));
           }}
-          options={yearOption}
+          options={YEAR_OPTION}
           title={year}
           optSelected={product.year}
           width={400}
@@ -343,7 +290,7 @@ export default function UserInfo({ user }: Props) {
           instanceId="techStack"
           key={selectKey} // Force re-render by changing key
           defaultValue={initialTechStack}
-          options={option}
+          options={SELECT_OPTION}
           components={animatedComponents}
           isMulti
           onChange={(selectedOption) => {
@@ -435,6 +382,7 @@ export default function UserInfo({ user }: Props) {
           제안 받기
         </label>
         <button
+          type="button"
           onClick={toggleOffer}
           className={`relative h-[26px] w-[72px] rounded-md border p-2 hover:shadow-md ${product.alarmStatus ? "bg-neutral-orange-500" : "bg-neutral-white-0"}`}
         >
