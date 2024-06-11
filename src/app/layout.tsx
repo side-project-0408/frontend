@@ -8,6 +8,7 @@ import Link from "next/link";
 import logo from "../../public/logo.png";
 import { MSWComponent } from "@/mocks/MSWComponent";
 import ReactQueryProvider from "@/components/ReactQueryProvider";
+import RegisterButton from "@/components/register/RegisterButton";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -50,6 +51,7 @@ export default function RootLayout({
                   <Link href={"/people"}>People</Link>
                 </section>
                 <section className="flex gap-2.5">
+                  <RegisterButton />
                   <Link href="/logout">로그아웃</Link>
                   <Link href="/login">로그인</Link>
                   <Link href="/mypage">마이페이지</Link>
