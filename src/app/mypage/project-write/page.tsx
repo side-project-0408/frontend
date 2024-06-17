@@ -24,7 +24,11 @@ export default function ProjectWritePage() {
       {data?.data.length === 0 ? (
         <NoDataAlert>작성한 프로젝트가 없습니다.</NoDataAlert>
       ) : (
-        <>{data?.data.map((project) => <ProjectBox project={project} />)}</>
+        <>
+          {data?.data.map((project, i) => (
+            <ProjectBox key={`project${i}`} project={project} />
+          ))}
+        </>
       )}
     </>
   );

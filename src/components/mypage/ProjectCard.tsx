@@ -26,7 +26,11 @@ export default function ProjectCard() {
           <p>찜한 프로젝트가 없습니다.</p>
         </NoDataAlert>
       ) : (
-        <>{data?.data.map((project) => <ProjectBox project={project} />)}</>
+        <>
+          {data?.data.map((project, i) => (
+            <ProjectBox key={`projectBox${i}`} project={project} />
+          ))}
+        </>
       )}
     </div>
   );
