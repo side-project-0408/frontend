@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Set up Node.js
         uses: actions/setup-node@v3
@@ -29,12 +29,14 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           EC2_INSTANCE_ID: ${{ secrets.EC2_INSTANCE_ID }}
-          EC2_KEY_NAME: ${{ secrets.EC2_KEY_NAME }}
           EC2_PUBLIC_IP: ${{ secrets.EC2_PUBLIC_IP }}
         run: |
           sudo apt-get update
           sudo apt-get install -y awscli
-          scp -i ~/ssh/$EC2_KEY_NAME.pem -r ./build ubuntu@$EC2_PUBLIC_IP:/var/www/html
+          echo "${{ secrets.EC2_KEY }}" > /tmp/key.pem
+          chmod 600 /tmp/key.pem
+          scp -i /tmp/key.pem -r ./build ubuntu@${{ secrets.EC2_PUBLIC_IP }}:/var/www/html
+          ssh -i /tmp/key.pem ubuntu@${{ secrets.EC2_PUBLIC_IP }} 'sudo systemctl restart nginx'
 
       - name: Invalidate CloudFront Cache
         env:
