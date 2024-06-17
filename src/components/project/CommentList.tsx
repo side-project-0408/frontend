@@ -67,7 +67,6 @@ export default function CommentList({ projectId }: Props) {
     queryFn: getComment,
   });
 
-  console.log("data?", data);
   const editComment = useMutation({
     mutationFn: ({
       commentId,
