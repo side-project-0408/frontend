@@ -4,7 +4,6 @@ import Image from "next/image";
 import {
   FormEvent,
   FormEventHandler,
-  MouseEventHandler,
   useEffect,
   useRef,
   useState,
@@ -15,7 +14,7 @@ import { IoMdCloseCircle } from "react-icons/io";
 import { FaCirclePlus } from "react-icons/fa6";
 import Select from "react-select";
 import makeAnimated from "react-select/animated";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import AddInput from "./AddInput";
 import { getCookie } from "cookies-next";
 import { useRouter } from "next/navigation";
@@ -24,6 +23,7 @@ import {
   SELECT_POSITION_OPTION,
   YEAR_OPTION,
 } from "@/constants";
+import getNicknameCheck from "@/lib/mypage/getNicknameCheck";
 
 type Props = {
   user: GetUserData;
@@ -39,6 +39,7 @@ export default function UserInfo({ user }: Props) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const softSkillRef = useRef<HTMLInputElement>(null);
 
+  const [dupliCheck, setDupliCheck] = useState(false);
   const [image, setImage] = useState<ImageFile>(null);
   const [errorMessage, setErrorMessage] = useState(false);
   const {
@@ -59,6 +60,52 @@ export default function UserInfo({ user }: Props) {
   const [selectKey, setSelectKey] = useState(0);
 
   const [product, setProduct] = useState<GetUserData>(user ?? {});
+
+  const { data, refetch: refetchNicknameCheck } = useQuery({
+    queryKey: [
+      "get",
+      "nicknameCheck",
+      access_token as string,
+      product.nickname,
+    ],
+    queryFn: getNicknameCheck,
+    enabled: false,
+  });
+
+  const handleDupliCheck = async () => {
+    setDupliCheck(true);
+    const { data } = await refetchNicknameCheck();
+    if (data?.data === true) {
+      alert("사용할 수 있는 닉네임 입니다.");
+    } else {
+      alert("사용 불가능한 닉네임 입니다.");
+      setDupliCheck(false);
+    }
+  };
+
+  const emailCheckMutation = useMutation({
+    mutationFn: async (e: React.MouseEvent<HTMLButtonElement>) => {
+      e.preventDefault();
+      await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/verificationCode?email=${product.email}`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${access_token}`,
+          },
+        },
+      );
+    },
+    onSuccess(data) {
+      alert(
+        "이메일 인증 번호가 전송 되었습니다. 이메일 확인 후 인증번호를 입력해주세요",
+      );
+    },
+  });
+
+  const handleEmail = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    emailCheckMutation.mutate(e);
+  };
 
   useEffect(() => {
     setSelectKey((prevKey) => prevKey + 1);
@@ -125,6 +172,8 @@ export default function UserInfo({ user }: Props) {
     e.preventDefault();
     if (!product.position || !product.techStack || !product.softSkill) {
       setErrorMessage(true);
+    } else if (dupliCheck === false) {
+      alert("닉네임 중복 체크가 필요합니다.");
     } else {
       mutation.mutate(e);
     }
@@ -204,6 +253,13 @@ export default function UserInfo({ user }: Props) {
           onChange={handleChange}
           className="h-[55px] w-[400px] rounded-md border pl-[8px] placeholder:text-neutral-black-800"
         />
+        <button
+          onClick={handleDupliCheck}
+          type="button"
+          className="w-fit rounded-md border p-2 text-xs transition hover:bg-neutral-orange-500 hover:text-neutral-white-0"
+        >
+          닉네임 중복 확인
+        </button>
       </div>
       <div className="flex flex-col gap-2">
         <label htmlFor="" className="text-sm font-bold">
@@ -216,6 +272,13 @@ export default function UserInfo({ user }: Props) {
           onChange={handleChange}
           className="h-[55px] w-[400px] rounded-md border pl-[8px] placeholder:text-neutral-black-800"
         />
+        {/* <button
+          onClick={handleEmail}
+          type="button"
+          className="w-fit rounded-md border p-2 text-xs transition hover:bg-neutral-orange-500 hover:text-neutral-white-0"
+        >
+          이메일 변경 하기
+        </button> */}
       </div>
       <div className="flex flex-col gap-2">
         <label htmlFor="" className="text-sm font-bold">
