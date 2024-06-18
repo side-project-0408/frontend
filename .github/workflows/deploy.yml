@@ -44,17 +44,25 @@ jobs:
           scp -i /tmp/key.pem -r .next/* ubuntu@${{ secrets.EC2_PUBLIC_IP }}:/var/www/html
           ssh -i /tmp/key.pem ubuntu@${{ secrets.EC2_PUBLIC_IP }} 'sudo systemctl daemon-reload && sudo systemctl restart nginx'
 
-      - name: Verify AWS CLI configuration
+      - name: Configure AWS CLI
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: ap-northeast-2
+        run: |
+          mkdir -p ~/.aws
+          echo "[default]" > ~/.aws/credentials
+          echo "aws_access_key_id=${{ secrets.AWS_ACCESS_KEY_ID }}" >> ~/.aws/credentials
+          echo "aws_secret_access_key=${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> ~/.aws/credentials
+          echo "[default]" > ~/.aws/config
+          echo "region=ap-northeast-2" >> ~/.aws/config
+
+      - name: Verify AWS CLI configuration
         run: |
           aws sts get-caller-identity --debug
 
       - name: Invalidate CloudFront Cache
         env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           DISTRIBUTION_ID: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}
         run: |
           aws cloudfront create-invalidation --distribution-id $DISTRIBUTION_ID --paths "/*" --debug
