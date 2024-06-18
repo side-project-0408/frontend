@@ -42,7 +42,7 @@ jobs:
           chmod 600 /tmp/key.pem
           ssh-keyscan -H ${{ secrets.EC2_PUBLIC_IP }} >> ~/.ssh/known_hosts
           scp -i /tmp/key.pem -r .next/* ubuntu@${{ secrets.EC2_PUBLIC_IP }}:/var/www/html
-          ssh -i /tmp/key.pem ubuntu@${{ secrets.EC2_PUBLIC_IP }} 'sudo systemctl daemon-reload && sudo systemctl restart nginx'
+          ssh -i /tmp/key.pem ubuntu@${{ secrets.EC2_PUBLIC_IP }} 'sudo chown -R ubuntu:ubuntu /var/www/html && sudo systemctl daemon-reload && sudo systemctl restart nginx'
 
       - name: Configure AWS CLI
         env:
@@ -66,3 +66,4 @@ jobs:
           DISTRIBUTION_ID: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}
         run: |
           aws cloudfront create-invalidation --distribution-id $DISTRIBUTION_ID --paths "/*" --debug
+ㄹ
