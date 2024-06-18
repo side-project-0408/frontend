@@ -43,7 +43,7 @@ jobs:
           ssh-keyscan ${{ secrets.EC2_PUBLIC_IP }} >> ~/.ssh/known_hosts
           ssh -i /tmp/key.pem ubuntu@${{ secrets.EC2_PUBLIC_IP }} 'sudo chown -R ubuntu:ubuntu /var/www/html'
           scp -i /tmp/key.pem -r ./.next/* ubuntu@${{ secrets.EC2_PUBLIC_IP }}:/var/www/html
-          ssh -i /tmp/key.pem ubuntu@${{ secrets.EC2_PUBLIC_IP }} 'sudo systemctl restart nginx'
+          ssh -i /tmp/key.pem ubuntu@${{ secrets.EC2_PUBLIC_IP }} 'sudo systemctl daemon-reload && sudo systemctl restart nginx'
 
       - name: Invalidate CloudFront Cache
         env:
