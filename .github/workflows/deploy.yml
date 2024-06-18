@@ -35,7 +35,6 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           EC2_INSTANCE_ID: ${{ secrets.EC2_INSTANCE_ID }}
           EC2_PUBLIC_IP: ${{ secrets.EC2_PUBLIC_IP }}
-          ACTIONS_RUNNER_DEBUG: ${{ secrets.ACTIONS_RUNNER_DEBUG }}
         run: |
           sudo apt-get update && sudo apt-get install -y awscli
           mkdir -p ~/.ssh
@@ -45,11 +44,17 @@ jobs:
           scp -i /tmp/key.pem -r .next/* ubuntu@${{ secrets.EC2_PUBLIC_IP }}:/var/www/html
           ssh -i /tmp/key.pem ubuntu@${{ secrets.EC2_PUBLIC_IP }} 'sudo systemctl daemon-reload && sudo systemctl restart nginx'
 
+      - name: Verify AWS CLI configuration
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: |
+          aws sts get-caller-identity
+
       - name: Invalidate CloudFront Cache
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           DISTRIBUTION_ID: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}
-          ACTIONS_RUNNER_DEBUG: ${{ secrets.ACTIONS_RUNNER_DEBUG }}
         run: |
-          aws cloudfront create-invalidation --distribution-id $DISTRIBUTION_ID --paths "/*"
+          aws cloudfront create-invalidation --distribution-id $DISTRIBUTION_ID --paths "/*" --debug
