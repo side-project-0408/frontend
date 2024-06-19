@@ -33,9 +33,7 @@ export default async function Home({ searchParams }: Props) {
       <div className="flex flex-col gap-[60px]">
         <div className="flex flex-col gap-[20px]">
           <div className="flex justify-between">
-            <div className="text-xl font-bold">
-              이번 주 Hot People test 다시
-            </div>
+            <div className="text-xl font-bold">이번 주 Hot People</div>
             <Link href={`/people`}>전체보기</Link>
           </div>
           <div className="flex flex-wrap items-center gap-[9px]">
