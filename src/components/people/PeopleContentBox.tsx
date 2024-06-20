@@ -16,7 +16,7 @@ export default function PeopleContentBox({ contentData }: Props) {
     <div className="flex gap-4">
       <Link
         href={`/people/${data.userId}`}
-        className="relative flex h-[308px] w-[288px] flex-col rounded-2xl border-2 bg-neutral-white-0 p-5 transition-transform hover:-translate-y-1 hover:border-orange-500"
+        className="relative flex h-[308px] w-[288px] flex-col rounded-2xl border-2 bg-neutral-white-0 p-5 shadow-lg transition-transform hover:-translate-y-1 hover:border-orange-500"
       >
         {data.recent && (
           <Image
