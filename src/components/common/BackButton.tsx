@@ -1,7 +1,6 @@
 "use client";
-import Image from "next/image";
-import backIcon from "../../../public/image/backIcon.svg";
 import { useRouter } from "next/navigation";
+import { IoArrowBack } from "react-icons/io5";
 
 export default function BackButton() {
   const router = useRouter();
@@ -10,7 +9,7 @@ export default function BackButton() {
   };
   return (
     <button onClick={onClickBack} className="h-[40px] w-[40px]">
-      <Image src={backIcon} alt="뒤로가기 아이콘" />
+      <IoArrowBack className="text-[36px]" />
     </button>
   );
 }
