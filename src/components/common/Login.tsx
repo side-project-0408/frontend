@@ -13,7 +13,7 @@ export default function Login() {
         className="h-[50px] w-full border border-black"
         onClick={async () => {
           window.location.href =
-            "http://43.203.98.138:8081/oauth2/authorization/kakao";
+            "https://api.match-mate.store/oauth2/authorization/kakao";
         }}
       >
         카카오 로그인
