@@ -4,7 +4,13 @@ import SelectStack from "@/components/common/SelectStack";
 import Peoples from "@/components/people/Peoples";
 import SearchForm from "@/components/common/SearchForm";
 import { useRouter } from "next/navigation";
-import { FormEventHandler, useEffect, useRef, useState } from "react";
+import {
+  FormEventHandler,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { SELECT_POSITION_OPTION } from "@/constants";
 import { convertPositionKorToEng } from "@/lib/convertPositionKrToEng";
 
@@ -26,16 +32,19 @@ export default function PeoplePage({ searchParams }: Props) {
   const [keyword, setKeyword] = useState<string>("");
   const ref = useRef<any>();
 
-  const changeSearchParams = (key: string, value: any) => {
-    const newSearchParams = new URLSearchParams({
-      ...searchParams,
-      [key]: value,
-    });
-    if (!value) {
-      newSearchParams.delete(key);
-    }
-    router.replace(`/people?${newSearchParams.toString()}`);
-  };
+  const changeSearchParams = useCallback(
+    (key: string, value: any) => {
+      const newSearchParams = new URLSearchParams({
+        ...searchParams,
+        [key]: value,
+      });
+      if (!value) {
+        newSearchParams.delete(key);
+      }
+      router.replace(`/people?${newSearchParams.toString()}`);
+    },
+    [router, searchParams],
+  );
 
   const onClickSelectBox = (value: string) => {
     setOptSelected(value);
@@ -52,7 +61,7 @@ export default function PeoplePage({ searchParams }: Props) {
   //기술스택 쿼리파람즈 추가
   useEffect(() => {
     changeSearchParams("techStack", selectedStack.join(","));
-  }, [selectedStack]);
+  }, [selectedStack, changeSearchParams]);
 
   return (
     <div className="flex flex-col gap-[20px]">

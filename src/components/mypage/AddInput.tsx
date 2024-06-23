@@ -59,6 +59,7 @@ export default function AddInput({ linkUrls, setLink }: Props) {
         );
       })}
       <button
+        type="button"
         onClick={handleClick}
         className="flex items-center gap-1 text-sm font-bold"
       >

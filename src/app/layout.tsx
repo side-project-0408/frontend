@@ -1,16 +1,32 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import "./globals.css";
-
+import localFont from "next/font/local";
 import Image from "next/image";
 import Link from "next/link";
-
-import logo from "../../public/logo.png";
+import logo from "../../public/logo.svg";
 import { MSWComponent } from "@/mocks/MSWComponent";
 import ReactQueryProvider from "@/components/ReactQueryProvider";
 import RegisterButton from "@/components/register/RegisterButton";
 
-const inter = Inter({ subsets: ["latin"] });
+const pretendard = localFont({
+  src: [
+    {
+      path: "../../public/fonts/Pretendard-Light.woff",
+      weight: "500",
+      style: "nomal",
+    },
+    {
+      path: "../../public/fonts/Pretendard-Medium.woff",
+      weight: "600",
+      style: "nomal",
+    },
+    {
+      path: "../../public/fonts/Pretendard-Bold.woff",
+      weight: "700",
+      style: "nomal",
+    },
+  ],
+});
 
 export const metadata: Metadata = {
   title: {
@@ -33,7 +49,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.className} items-center bg-white`}>
+      <body className={`${pretendard.className} items-center bg-white`}>
         <div className="mx-auto max-w-[1200px]">
           <MSWComponent />
           <nav className="sticky top-0 z-[3] flex h-[80px] w-full flex-row items-center justify-center border-b-[1px] border-[#E4E4E4] bg-neutral-white-0 py-3">
@@ -66,11 +82,13 @@ export default function RootLayout({
         </div>
         <footer className="mt-[100px] flex w-full bg-gray-100 py-5">
           <div className="mx-auto flex max-w-[1200px] flex-1 flex-row justify-between">
-            <section>
-              <div className="h-[50px] w-[150px]">이미지</div>
-              <div className="text-sm">전화: 010-0000-0000</div>
-              <div className="text-sm">주소: 서울시 서울구 서울로 1234-7</div>
-              <div className="text-sm">Copyright © 2024 Match Mate</div>
+            <section className="flex flex-col gap-4">
+              <Image src={logo} alt="footerlogo" width={50} height={50} />
+              <div>
+                <div className="text-sm">전화: 010-0000-0000</div>
+                <div className="text-sm">주소: 서울시 서울구 서울로 1234-7</div>
+                <div className="text-sm">Copyright © 2024 Match Mate</div>
+              </div>
             </section>
             <section className="flex h-20 flex-row items-center gap-14">
               <Link

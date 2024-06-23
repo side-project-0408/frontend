@@ -14,69 +14,16 @@ import { IoMdCloseCircle } from "react-icons/io";
 import { FaCirclePlus } from "react-icons/fa6";
 import Select from "react-select";
 import makeAnimated from "react-select/animated";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import AddInput from "./AddInput";
 import { getCookie } from "cookies-next";
 import { useRouter } from "next/navigation";
-
-interface Option {
-  readonly label: string;
-  readonly value: string;
-}
-
-const positionOption = [
-  { id: 1, value: "frontend" },
-  { id: 2, value: "backend" },
-  { id: 3, value: "designer" },
-  { id: 4, value: "ios" },
-  { id: 5, value: "android" },
-  { id: 6, value: "devops" },
-  { id: 7, value: "pm" },
-];
-
-const yearOption = [
-  { id: 1, value: "0" },
-  { id: 2, value: "1" },
-  { id: 3, value: "2" },
-  { id: 4, value: "3" },
-  { id: 5, value: "4" },
-  { id: 6, value: "5" },
-  { id: 7, value: "6" },
-];
-const option: readonly Option[] = [
-  { label: "React", value: "react" },
-  { label: "TypeScript", value: "typescript" },
-  { label: "JavaScript", value: "javascript" },
-  { label: "Vue", value: "vue" },
-  { label: "Svelte", value: "svelte" },
-  { label: "Nextjs", value: "nextjs" },
-  { label: "Java", value: "java" },
-  { label: "Spring", value: "spring" },
-  { label: "Nodejs", value: "nodejs" },
-  { label: "Nestjs", value: "nestjs" },
-  { label: "Go", value: "go" },
-  { label: "Kotlin", value: "kotlin" },
-  { label: "Express", value: "express" },
-  { label: "MySQL", value: "mysql" },
-  { label: "MongoDB", value: "mongodb" },
-  { label: "Python", value: "python" },
-  { label: "Diango", value: "Diango" },
-  { label: "php", value: "php" },
-  { label: "GraphQL", value: "graphql" },
-  { label: "Firebase", value: "firebase" },
-  { label: "Flutter", value: "flutter" },
-  { label: "Swift", value: "swift" },
-  { label: "Kotlin", value: "kotlin" },
-  { label: "ReactNative", value: "reactnative" },
-  { label: "Unity", value: "unity" },
-  { label: "AWS", value: "aws" },
-  { label: "Kubernetes", value: "kubernetes" },
-  { label: "Docker", value: "docker" },
-  { label: "Git", value: "git" },
-  { label: "Figma", value: "figma" },
-  { label: "Zeplin", value: "zeplin" },
-  { label: "Jest", value: "jest" },
-];
+import {
+  SELECT_OPTION,
+  SELECT_POSITION_OPTION,
+  YEAR_OPTION,
+} from "@/constants";
+import getNicknameCheck from "@/lib/mypage/getNicknameCheck";
 
 type Props = {
   user: GetUserData;
@@ -92,6 +39,7 @@ export default function UserInfo({ user }: Props) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const softSkillRef = useRef<HTMLInputElement>(null);
 
+  const [dupliCheck, setDupliCheck] = useState(false);
   const [image, setImage] = useState<ImageFile>(null);
   const [errorMessage, setErrorMessage] = useState(false);
   const {
@@ -112,6 +60,52 @@ export default function UserInfo({ user }: Props) {
   const [selectKey, setSelectKey] = useState(0);
 
   const [product, setProduct] = useState<GetUserData>(user ?? {});
+
+  const { data, refetch: refetchNicknameCheck } = useQuery({
+    queryKey: [
+      "get",
+      "nicknameCheck",
+      access_token as string,
+      product.nickname,
+    ],
+    queryFn: getNicknameCheck,
+    enabled: false,
+  });
+
+  const handleDupliCheck = async () => {
+    setDupliCheck(true);
+    const { data } = await refetchNicknameCheck();
+    if (data?.data === true) {
+      alert("사용할 수 있는 닉네임 입니다.");
+    } else {
+      alert("사용 불가능한 닉네임 입니다.");
+      setDupliCheck(false);
+    }
+  };
+
+  const emailCheckMutation = useMutation({
+    mutationFn: async (e: React.MouseEvent<HTMLButtonElement>) => {
+      e.preventDefault();
+      await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/verificationCode?email=${product.email}`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${access_token}`,
+          },
+        },
+      );
+    },
+    onSuccess(data) {
+      alert(
+        "이메일 인증 번호가 전송 되었습니다. 이메일 확인 후 인증번호를 입력해주세요",
+      );
+    },
+  });
+
+  const handleEmail = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    emailCheckMutation.mutate(e);
+  };
 
   useEffect(() => {
     setSelectKey((prevKey) => prevKey + 1);
@@ -178,6 +172,8 @@ export default function UserInfo({ user }: Props) {
     e.preventDefault();
     if (!product.position || !product.techStack || !product.softSkill) {
       setErrorMessage(true);
+    } else if (dupliCheck === false) {
+      alert("닉네임 중복 체크가 필요합니다.");
     } else {
       mutation.mutate(e);
     }
@@ -257,6 +253,13 @@ export default function UserInfo({ user }: Props) {
           onChange={handleChange}
           className="h-[55px] w-[400px] rounded-md border pl-[8px] placeholder:text-neutral-black-800"
         />
+        <button
+          onClick={handleDupliCheck}
+          type="button"
+          className="w-fit rounded-md border p-2 text-xs transition hover:bg-neutral-orange-500 hover:text-neutral-white-0"
+        >
+          닉네임 중복 확인
+        </button>
       </div>
       <div className="flex flex-col gap-2">
         <label htmlFor="" className="text-sm font-bold">
@@ -269,13 +272,20 @@ export default function UserInfo({ user }: Props) {
           onChange={handleChange}
           className="h-[55px] w-[400px] rounded-md border pl-[8px] placeholder:text-neutral-black-800"
         />
+        {/* <button
+          onClick={handleEmail}
+          type="button"
+          className="w-fit rounded-md border p-2 text-xs transition hover:bg-neutral-orange-500 hover:text-neutral-white-0"
+        >
+          이메일 변경 하기
+        </button> */}
       </div>
       <div className="flex flex-col gap-2">
         <label htmlFor="" className="text-sm font-bold">
           직무
         </label>
         <SelectBox
-          options={positionOption}
+          options={SELECT_POSITION_OPTION}
           optSelected={product.position}
           title={position}
           onClick={(value) => {
@@ -294,7 +304,7 @@ export default function UserInfo({ user }: Props) {
           onClick={(value) => {
             setProduct((prev) => ({ ...prev, year: value }));
           }}
-          options={yearOption}
+          options={YEAR_OPTION}
           title={year}
           optSelected={product.year}
           width={400}
@@ -343,7 +353,7 @@ export default function UserInfo({ user }: Props) {
           instanceId="techStack"
           key={selectKey} // Force re-render by changing key
           defaultValue={initialTechStack}
-          options={option}
+          options={SELECT_OPTION}
           components={animatedComponents}
           isMulti
           onChange={(selectedOption) => {
@@ -435,6 +445,7 @@ export default function UserInfo({ user }: Props) {
           제안 받기
         </label>
         <button
+          type="button"
           onClick={toggleOffer}
           className={`relative h-[26px] w-[72px] rounded-md border p-2 hover:shadow-md ${product.alarmStatus ? "bg-neutral-orange-500" : "bg-neutral-white-0"}`}
         >
