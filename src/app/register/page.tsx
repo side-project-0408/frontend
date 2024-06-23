@@ -1,3 +1,9 @@
+import ProjectDetailEdit from "@/components/project/ProjectDetailEdit";
+
 export default function RegisterPeoject() {
-  return <div>Register Peoject page</div>;
+  return (
+    <div>
+      <ProjectDetailEdit />
+    </div>
+  );
 }
