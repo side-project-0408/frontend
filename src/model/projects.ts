@@ -46,3 +46,8 @@ export interface IProjects {
   result: string;
   data: IProjectData[];
 }
+
+export interface IFavoriteProjects {
+  result: string;
+  data: IProjects;
+}

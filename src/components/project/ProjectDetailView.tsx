@@ -1,16 +1,99 @@
 "use client";
 
-import { IProjectDetailData } from "@/model/projects";
+import { IFavoriteProjects, IProjectDetailData } from "@/model/projects";
 import Image from "next/image";
 import heart from "../../../public/image/heart.svg";
 import eye from "../../../public/image/eye.svg";
 import TechStack from "../common/TechStack";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { getCookie } from "cookies-next";
+import getMyFavoriteProjects from "@/lib/project/getMyFavoriteProjects";
+import { MouseEventHandler } from "react";
+
+import heartIcon from "../../../public/image/heart.svg";
+import fillHeartIcon from "../../../public/image/fillHeart.svg";
 
 type Prop = {
   detailedProject: IProjectDetailData | undefined;
 };
 
 export default function ProjectDetailView({ detailedProject }: Prop) {
+  const access_token = getCookie("access_token") as string;
+
+  const queryClient = useQueryClient();
+
+  const { data: myFavoriteProjectQuery } = useQuery<
+    IFavoriteProjects,
+    Error,
+    IFavoriteProjects,
+    [string, string, string]
+  >({
+    queryKey: ["get", "myFavoriteProjects", access_token],
+    queryFn: getMyFavoriteProjects,
+  });
+
+  console.log("myFavoriteProjectQuery", myFavoriteProjectQuery);
+
+  const isLikedProject = !!myFavoriteProjectQuery?.data.data.find(
+    (item) => item.projectId === Number(detailedProject?.projectId),
+  );
+  console.log("isLikedProject", isLikedProject);
+
+  const like = useMutation({
+    mutationFn: (projectId: string | undefined) => {
+      return fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/projects/favorite?projectId=${projectId}`,
+        {
+          method: "post",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${access_token}`,
+          },
+        },
+      );
+    },
+    onSuccess() {
+      queryClient.invalidateQueries({
+        queryKey: ["get", "myFavoriteProjects", access_token],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["project", "detail", detailedProject?.projectId.toString()],
+      });
+    },
+  });
+
+  const unLike = useMutation({
+    mutationFn: (projectId: string | undefined) => {
+      return fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/projects/favorite?projectId=${projectId}`,
+        {
+          method: "delete",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${access_token}`,
+          },
+        },
+      );
+    },
+    onSuccess() {
+      queryClient.invalidateQueries({
+        queryKey: ["get", "myFavoriteProjects", access_token],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["project", "detail", detailedProject?.projectId.toString()],
+      });
+    },
+  });
+
+  const onFavoriteProject: MouseEventHandler<HTMLButtonElement> = (e) => {
+    e.preventDefault();
+    if (isLikedProject) {
+      unLike.mutate(detailedProject?.projectId.toString());
+    } else {
+      like.mutate(detailedProject?.projectId.toString());
+    }
+  };
+
   if (!detailedProject) return <div>is fetching data...</div>;
 
   return (
@@ -78,8 +161,18 @@ export default function ProjectDetailView({ detailedProject }: Prop) {
         height={270}
       />
       <div>{detailedProject.description}</div>
-      <button>찜하기 버튼</button>
-      {/* TODO: 찜하기 버튼 추가 필요 */}
+      <button onClick={onFavoriteProject}>찜하기</button>
+      <button
+        onClick={onFavoriteProject}
+        className="flex h-[58px] w-[58px] flex-col items-center justify-center rounded-md border"
+      >
+        {isLikedProject ? (
+          <Image src={fillHeartIcon} alt="하트아이콘" width={20} height={20} />
+        ) : (
+          <Image src={heartIcon} alt="하트아이콘" width={20} height={20} />
+        )}
+        <h5 className="text-[12px]">{detailedProject.favoriteCount}</h5>
+      </button>
     </div>
   );
 }
