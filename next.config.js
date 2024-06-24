@@ -1,8 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  env: {
-    NEXT_PUBLIC_BASE_URL: process.env.NEXT_PUBLIC_BASE_URL,
-  },
   images: {
     remotePatterns: [
       {
@@ -14,6 +11,20 @@ const nextConfig = {
         hostname: "**.s3.ap-northeast-2.amazonaws.com",
       },
     ],
+    domains: ["res.cloudinary.com"],
+  },
+  async headers() {
+    return [
+      {
+        source: "/fonts/(.*)",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
+        ],
+      },
+    ];
   },
 };
 
