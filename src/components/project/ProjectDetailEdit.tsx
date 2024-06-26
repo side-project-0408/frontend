@@ -13,6 +13,9 @@ import Image from "next/image";
 
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import SelectBox from "../common/SelectBox";
+import { SELECT_POSITION_OPTION } from "@/constants";
+import { useRouter } from "next/navigation";
 
 type Prop = {
   detailedProject?: IProjectDetailData | undefined;
@@ -70,9 +73,15 @@ export default function ProjectDetailEdit({ detailedProject }: Prop) {
 
   const [projectDate, setProjectDate] = useState<ProjectDate>(new Date());
 
+  const [items, setItems] = useState([
+    { position: "", currentCount: 0, targetCount: 0 },
+  ]);
+
   const [projectTechStack, setProjectTechStack] = useState(
     detailedProject ? detailedProject.techStack : "",
   );
+
+  const router = useRouter();
 
   const access_token = getCookie("access_token") as string;
 
@@ -93,8 +102,79 @@ export default function ProjectDetailEdit({ detailedProject }: Prop) {
     setProjectDesc(e.target.value);
   };
 
-  const handleProjectDelete = () => {
-    alert("삭제하기");
+  const handlePositionChange = (index: number, value: string) => {
+    const newItems = [...items];
+    newItems[index].position = value;
+    setItems(newItems);
+  };
+
+  const handlePositionChangeWithCheck = (index: number, value: string) => {
+    const newPosition = value;
+    const currentPositions = items.map((item) => item.position);
+
+    if (currentPositions.includes(newPosition)) {
+      alert("이미 추가된 포지션입니다.");
+      handlePositionChange(index, "");
+      return;
+    }
+
+    handlePositionChange(index, value);
+  };
+
+  const handleCountChange = (
+    index: number,
+    countType: string,
+    change: number,
+  ) => {
+    const newItems = [...items];
+    if (newItems[index].position === "") {
+      alert("포지션을 선택해주세요.");
+      return;
+    }
+    if (newItems[index].currentCount < 0 || newItems[index].targetCount < 0) {
+      alert("0보다 작을 수 없습니다.");
+      return;
+    }
+    if (countType === "current") {
+      if (
+        change > 0 &&
+        newItems[index].currentCount > newItems[index].targetCount - 1
+      ) {
+        alert("모집 인원을 초과할 수 없습니다.");
+        return;
+      }
+      newItems[index].currentCount += change;
+    } else if (countType === "target") {
+      newItems[index].targetCount += change;
+    }
+    setItems(newItems);
+  };
+
+  const removeItem = (index: number) => {
+    const newItems = items.filter((_, i) => i !== index);
+    setItems(newItems);
+  };
+
+  const addItem = () => {
+    setItems([...items, { position: "", currentCount: 0, targetCount: 0 }]);
+  };
+
+  const handleProjectDelete = async () => {
+    try {
+      await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/posts/${detailedProject?.projectId}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${access_token}`,
+          },
+        },
+      );
+      console.log("삭제 완료");
+      router.push("/project");
+    } catch (err) {
+      console.log("삭제 에러", err);
+    }
   };
 
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -112,39 +192,51 @@ export default function ProjectDetailEdit({ detailedProject }: Prop) {
   const animatedComponents = makeAnimated();
 
   const mutation = useMutation({
-    // TODO: cors 문제 해결 필요
     mutationFn: async (e: FormEvent) => {
       e.preventDefault();
-      const sendingData = {
-        dto: {
-          title: projectName,
-          deadline: projectDate?.toISOString().split("T")[0],
-          softSkill: "",
-          importantQuestion: "",
-          techStack: projectTechStack,
-          description: projectDesc,
-          recruit: [
-            {
-              position: "frontend",
-              currentCount: 1,
-              targetCount: 3,
-            },
-          ],
-        },
-        file: projectImage,
+
+      const formData = new FormData();
+
+      const dto = {
+        title: projectName,
+        deadline: projectDate?.toISOString().split("T")[0],
+        softSkill: "시간 관리, 직업 윤리",
+        importantQuestion: "주 1회 회의",
+        techStack: projectTechStack,
+        description: projectDesc,
+        recruit: items,
       };
-      console.log("sendingData", sendingData);
+
+      formData.append(
+        "dto",
+        new Blob([JSON.stringify(dto)], { type: "application/json" }),
+      );
+
+      if (projectImage) {
+        formData.append("file", projectImage, projectImage.name);
+      }
+
+      // console.log("dto", dto);
+      // console.log("file", projectImage);
+      console.log(
+        detailedProject?.projectId
+          ? `${process.env.NEXT_PUBLIC_BASE_URL}/posts/${detailedProject?.projectId}`
+          : `${process.env.NEXT_PUBLIC_BASE_URL}/projects`,
+      );
+
       await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/posts/${detailedProject?.projectId}`,
+        detailedProject?.projectId
+          ? `${process.env.NEXT_PUBLIC_BASE_URL}/posts/${detailedProject?.projectId}`
+          : `${process.env.NEXT_PUBLIC_BASE_URL}/projects`,
         {
-          method: "PATCH",
+          method: detailedProject?.projectId ? "PATCH" : "POST",
           headers: {
-            "Content-Type": "application/json",
             Authorization: `Bearer ${access_token}`,
           },
-          body: JSON.stringify(sendingData),
+          body: formData,
         },
       );
+      console.log("변경 성공!");
     },
   });
 
@@ -185,7 +277,43 @@ export default function ProjectDetailEdit({ detailedProject }: Prop) {
         </div>
       </div>
       <div className="text-[20px] font-bold">모집 인원</div>
-      {/* TODO: 모집인원 추가*/}
+      {items.map((item, idx) => {
+        return (
+          <div key={`projectRecruit${idx}`} className="flex">
+            <SelectBox
+              options={SELECT_POSITION_OPTION}
+              optSelected={item.position}
+              title={"select position"}
+              onClick={(value) => {
+                handlePositionChangeWithCheck(idx, value);
+              }}
+              width={150}
+              height={50}
+              className="rounded-md"
+            />
+            <div className="flex w-[30px] items-center">
+              <button onClick={() => handleCountChange(idx, "current", -1)}>
+                -
+              </button>
+              <span>{item.currentCount}</span>
+              <button onClick={() => handleCountChange(idx, "current", 1)}>
+                +
+              </button>
+            </div>
+            <div className="flex w-[30px] items-center">
+              <button onClick={() => handleCountChange(idx, "target", -1)}>
+                -
+              </button>
+              <span>{item.targetCount}</span>
+              <button onClick={() => handleCountChange(idx, "target", 1)}>
+                +
+              </button>
+            </div>
+            <button onClick={() => removeItem(idx)}>삭제</button>
+          </div>
+        );
+      })}
+      <button onClick={addItem}>Add Item</button>
       <div className="flex flex-col gap-2">
         <div className="text-[20px] font-bold">사용 기술</div>
         <Select
