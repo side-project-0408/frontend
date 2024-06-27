@@ -11,17 +11,17 @@ import RegisterButton from "@/components/register/RegisterButton";
 const pretendard = localFont({
   src: [
     {
-      path: "../../public/fonts/Pretendard-Light.woff",
+      path: "../../public/fonts/Pretendard-Light.woff2",
       weight: "500",
       style: "nomal",
     },
     {
-      path: "../../public/fonts/Pretendard-Medium.woff",
+      path: "../../public/fonts/Pretendard-Medium.woff2",
       weight: "600",
       style: "nomal",
     },
     {
-      path: "../../public/fonts/Pretendard-Bold.woff",
+      path: "../../public/fonts/Pretendard-Bold.woff2",
       weight: "700",
       style: "nomal",
     },
@@ -56,9 +56,11 @@ export default function RootLayout({
             <div className="flex flex-1 flex-row items-center justify-center gap-[40px]">
               <Link href="/">
                 <Image
-                  src={logo}
+                  src={`https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/v1719237353/match-mate/logo_k1evxe.png`}
                   alt="this is logo image"
                   className="w-[100px]"
+                  width={150}
+                  height={100}
                 ></Image>
               </Link>
               <div className="flex w-full flex-row justify-between">

@@ -19,7 +19,6 @@
     "react-select": "^5.8.0"
   },
   "devDependencies": {
-    "@faker-js/faker": "^8.4.1",
     "@mswjs/http-middleware": "^0.10.1",
     "@tanstack/react-query-devtools": "^5.35.1",
     "@types/cors": "^2.8.17",
