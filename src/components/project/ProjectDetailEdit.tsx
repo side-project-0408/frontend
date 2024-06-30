@@ -251,6 +251,7 @@ export default function ProjectDetailEdit({ detailedProject }: Prop) {
           formData.append("file", projectImage, projectImage.name);
           console.log("new file", projectImage);
         } else {
+          formData.append("file", new Blob([""], { type: "image/png" }), "");
           // const fileContent = detailedProject?.projectFileUrl as string;
           // const blob = new Blob([fileContent], { type: "image/png" });
           // const file = new File(
