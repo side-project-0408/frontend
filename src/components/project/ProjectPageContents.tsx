@@ -8,6 +8,7 @@ import { SELECT_POSITION_OPTION } from "@/constants";
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getTotalProjects } from "@/lib/project/getTotalProjects";
+import Pagination from "../common/Pagination";
 
 export default function ProjectPageContents() {
   const [selectedPosition, setSelectedPosition] = useState("");
@@ -48,13 +49,14 @@ export default function ProjectPageContents() {
 
   return (
     <div>
-      <div className="flex justify-between">
+      <div className="mt-[40px] flex justify-between">
         <div className="flex gap-3">
           <SelectBox
             onClick={handleSelectPosition}
             options={SELECT_POSITION_OPTION}
             title="포지션"
             optSelected={selectedPosition}
+            className="rounded-2xl"
           />
           <SelectStack
             optSelected={selectedTechStack}
@@ -70,7 +72,7 @@ export default function ProjectPageContents() {
           />
         </form>
       </div>
-      <div className="flex justify-end gap-3">
+      <div className="test-[17px] my-[20px] flex justify-end gap-[20px] font-semibold">
         <button
           onClick={() => {
             setSortType("RECENT");
@@ -91,7 +93,7 @@ export default function ProjectPageContents() {
           return <ProjectBox key={`totalProject${i}`} project={project} />;
         })}
       </div>
-      <div>
+      {/* <div>
         <button
           onClick={() => setPage((old) => Math.max(old - 1, 0))}
           disabled={page === 0}
@@ -106,7 +108,12 @@ export default function ProjectPageContents() {
         >
           Next
         </button>
-      </div>
+      </div> */}
+      <Pagination
+        totalPages={projects?.totalPages}
+        page={page}
+        setPage={setPage}
+      />
     </div>
   );
 }
