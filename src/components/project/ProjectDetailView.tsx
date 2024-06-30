@@ -87,6 +87,7 @@ export default function ProjectDetailView({ detailedProject }: Prop) {
 
   const onFavoriteProject: MouseEventHandler<HTMLButtonElement> = (e) => {
     e.preventDefault();
+    if (!access_token) alert("찜하기 기능은 로그인 후 이용해주세요.");
     if (isLikedProject) {
       unLike.mutate(detailedProject?.projectId.toString());
     } else {
@@ -98,48 +99,60 @@ export default function ProjectDetailView({ detailedProject }: Prop) {
 
   return (
     <div>
-      <div className="text-[30px] font-bold">{detailedProject.title}</div>
-      <section className="flex">
+      <div className="text-[32px] font-bold">{detailedProject.title}</div>
+      <section className="mt-[20px] flex items-center">
         <Image
-          className="rounded-2xl"
+          className="rounded-full"
           src={detailedProject.userFileUrl}
           alt="This is user profile image"
-          width={30}
-          height={30}
+          width={60}
+          height={60}
         />
-        <div>
-          <div className="text-[14px] font-semibold">
+        <div className="ml-[20px]">
+          <div className="text-[24px] font-normal">
             {detailedProject.nickname}
           </div>
-          <div className="mt-[8px] text-[12px] font-medium text-[#666666]">
+          <div className="mt-[6px] text-[16px] font-normal text-[#666666]">
             {`마감일 | ${detailedProject.deadline.replaceAll("-", ".")}`}
           </div>
         </div>
       </section>
-      <section className="flex items-center gap-[4px]">
+      <section className="mt-[40px] flex items-center gap-[4px]">
         <Image src={heart} alt="This is heart icon" />
         <div>{detailedProject.favoriteCount}</div>
         <Image src={eye} alt="This is eye icon" className="ml-[4px]" />
         <div>{detailedProject.viewCount}</div>
       </section>
-      <hr />
-      <div className="text-[20px] font-bold">모집인원</div>
-      <div className="flex gap-[10px]">
+      <hr className="mt-[20px]" />
+      <div className="mb-[20px] mt-[40px] text-[22px] font-bold">모집인원</div>
+      <div className="flex max-w-[600px] flex-wrap gap-[50px]">
         {detailedProject.recruit.map((r, idx) => {
           return (
-            <div key={`recruit${idx}`} className="flex">
-              <div>{r.position}</div>
-              <div>{r.currentCount}</div>
-              <div>/</div>
-              <div>{r.targetCount}</div>
-              <div>
-                {r.currentCount < r.targetCount ? "모집중" : "모집 완료"}
+            <div key={`recruit${idx}`} className="flex gap-[30px]">
+              <div className="text-[18px] font-semibold">{r.position}</div>
+              <div className="flex gap-[2px]">
+                <div className="text-[18px] font-semibold">
+                  {r.currentCount}
+                </div>
+                <div className="text-[18px] font-semibold">/</div>
+                <div className="text-[18px] font-semibold">{r.targetCount}</div>
+              </div>
+              <div className="flex h-auto w-[89px] items-center justify-center rounded-md bg-[#FF800B] text-[14px] font-normal text-white">
+                {r.currentCount < r.targetCount ? (
+                  <div className="flex h-auto w-[89px] items-center justify-center rounded-md bg-[#FF800B] text-[14px] font-normal text-white">
+                    <div>모집중</div>
+                  </div>
+                ) : (
+                  <div className="flex h-auto w-[89px] items-center justify-center rounded-md bg-[#F2F2F2] text-[14px] font-normal text-[#666666]">
+                    <div>모집 완료</div>
+                  </div>
+                )}
               </div>
             </div>
           );
         })}
       </div>
-      <div className="text-[20px] font-bold">사용언어</div>
+      <div className="mb-[20px] mt-[40px] text-[22px] font-bold">사용언어</div>
       <div className="flex gap-[10px]">
         {detailedProject.techStack
           .replaceAll(" ", "")
@@ -152,7 +165,9 @@ export default function ProjectDetailView({ detailedProject }: Prop) {
             );
           })}
       </div>
-      <div className="text-[20px] font-bold">프로젝트 소개</div>
+      <div className="mb-[20px] mt-[40px] text-[22px] font-bold">
+        프로젝트 소개
+      </div>
       <Image
         className=""
         src={"/projectImageDefault.svg"}
@@ -160,19 +175,27 @@ export default function ProjectDetailView({ detailedProject }: Prop) {
         width={741}
         height={270}
       />
-      <div>{detailedProject.description}</div>
-      <button onClick={onFavoriteProject}>찜하기</button>
-      <button
-        onClick={onFavoriteProject}
-        className="flex h-[58px] w-[58px] flex-col items-center justify-center rounded-md border"
-      >
-        {isLikedProject ? (
-          <Image src={fillHeartIcon} alt="하트아이콘" width={20} height={20} />
-        ) : (
-          <Image src={heartIcon} alt="하트아이콘" width={20} height={20} />
-        )}
-        <h5 className="text-[12px]">{detailedProject.favoriteCount}</h5>
-      </button>
+      <div className="mt-[50px] max-w-[741px]">
+        {detailedProject.description}
+      </div>
+      <div className="flex max-w-[741px] justify-center">
+        <button
+          onClick={onFavoriteProject}
+          className="mt-[87px] flex h-[58px] w-[58px] flex-col items-center justify-center rounded-md border"
+        >
+          {isLikedProject ? (
+            <Image
+              src={fillHeartIcon}
+              alt="하트아이콘"
+              width={20}
+              height={20}
+            />
+          ) : (
+            <Image src={heartIcon} alt="하트아이콘" width={20} height={20} />
+          )}
+          <h5 className="text-[12px]">{detailedProject.favoriteCount}</h5>
+        </button>
+      </div>
     </div>
   );
 }

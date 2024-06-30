@@ -82,17 +82,16 @@ export default function RootLayout({
             {modal}
           </ReactQueryProvider>
         </div>
-        <footer className="mt-[100px] flex w-full bg-gray-100 py-5">
-          <div className="mx-auto flex max-w-[1200px] flex-1 flex-row justify-between">
-            <section className="flex flex-col gap-4">
-              <Image src={logo} alt="footerlogo" width={50} height={50} />
-              <div>
-                <div className="text-sm">전화: 010-0000-0000</div>
-                <div className="text-sm">주소: 서울시 서울구 서울로 1234-7</div>
-                <div className="text-sm">Copyright © 2024 Match Mate</div>
-              </div>
-            </section>
-            <section className="flex h-20 flex-row items-center gap-14">
+        <footer className="mt-[100px] flex w-full items-center justify-center bg-gray-100 py-5">
+          <section className="flex flex-col items-center gap-4 border">
+            <Image src={logo} alt="footerlogo" width={50} height={50} />
+            <div className="flex gap-[30px]">
+              <div className="text-sm">전화: 010-0000-0000</div>
+              <div className="text-sm">주소: 서울시 서울구 서울로 1234-7</div>
+            </div>
+            <div className="text-sm">Copyright © 2024 Match Mate</div>
+          </section>
+          {/* <section className="flex h-20 flex-row items-center gap-14">
               <Link
                 href="https://www.naver.com"
                 target="_blank"
@@ -117,8 +116,7 @@ export default function RootLayout({
               >
                 서비스 소개
               </Link>
-            </section>
-          </div>
+            </section> */}
         </footer>
       </body>
     </html>
