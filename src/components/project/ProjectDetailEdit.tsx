@@ -206,23 +206,6 @@ export default function ProjectDetailEdit({ detailedProject }: Prop) {
 
   const animatedComponents = makeAnimated();
 
-  // const getFileNameFromUrl = (url: string) => {
-  //   // URL의 마지막 슬래시 이후의 문자열을 추출
-  //   const parts = url.split("/");
-  //   const lastPart = parts[parts.length - 1];
-
-  //   return lastPart;
-  // };
-
-  // const convertUrlToFile = async (url: string) => {
-  //   const response = await fetch(url);
-  //   const blob = await response.blob();
-  //   const file = new File([blob], getFileNameFromUrl(url), {
-  //     type: blob.type,
-  //   });
-  //   console.log("file", file);
-  // };
-
   const mutation = useMutation({
     mutationFn: async (e: FormEvent) => {
       e.preventDefault();
@@ -249,27 +232,26 @@ export default function ProjectDetailEdit({ detailedProject }: Prop) {
 
         if (projectImage) {
           formData.append("file", projectImage, projectImage.name);
-          console.log("new file", projectImage);
         } else {
-          formData.append("file", new Blob([""], { type: "image/png" }), "");
-          // const fileContent = detailedProject?.projectFileUrl as string;
-          // const blob = new Blob([fileContent], { type: "image/png" });
-          // const file = new File(
-          //   [blob],
-          //   getFileNameFromUrl(detailedProject?.projectFileUrl as string),
-          //   { type: "image/png" },
-          // );
-          // formData.append("file", file);
-          // console.log("file", file);
+          const currentImageUrl = detailedProject?.projectFileUrl as string;
+          const response = await fetch(currentImageUrl);
+
+          if (!response.ok) {
+            throw new Error("Error occurs while fetching current image url...");
+          }
+
+          const blob = await response.blob();
+
+          const parts = currentImageUrl.split("/");
+          const fileName = parts[parts.length - 1];
+          const currentImageFile = new File([blob], fileName, {
+            type: blob.type,
+          });
+
+          formData.append("file", currentImageFile, currentImageFile.name);
         }
 
-        console.log("dto", dto);
-
-        console.log(
-          detailedProject?.projectId
-            ? `${process.env.NEXT_PUBLIC_BASE_URL}/posts/${detailedProject?.projectId}`
-            : `${process.env.NEXT_PUBLIC_BASE_URL}/projects`,
-        );
+        // console.log("dto", dto);
 
         await fetch(
           detailedProject?.projectId
@@ -285,7 +267,7 @@ export default function ProjectDetailEdit({ detailedProject }: Prop) {
         );
         alert("프로젝트가 저장되었습니다.");
       } catch (error) {
-        console.log("error", error);
+        console.log("Error while saving project: ", error);
       }
     },
   });

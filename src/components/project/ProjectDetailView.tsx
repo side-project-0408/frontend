@@ -32,12 +32,12 @@ export default function ProjectDetailView({ detailedProject }: Prop) {
     queryFn: getMyFavoriteProjects,
   });
 
-  console.log("myFavoriteProjectQuery", myFavoriteProjectQuery);
+  // console.log("myFavoriteProjectQuery", myFavoriteProjectQuery);
 
   const isLikedProject = !!myFavoriteProjectQuery?.data.data.find(
     (item) => item.projectId === Number(detailedProject?.projectId),
   );
-  console.log("isLikedProject", isLikedProject);
+  // console.log("isLikedProject", isLikedProject);
 
   const like = useMutation({
     mutationFn: (projectId: string | undefined) => {
@@ -107,6 +107,7 @@ export default function ProjectDetailView({ detailedProject }: Prop) {
           alt="This is user profile image"
           width={60}
           height={60}
+          style={{ width: "auto", height: "auto" }}
         />
         <div className="ml-[20px]">
           <div className="text-[24px] font-normal">
@@ -170,7 +171,11 @@ export default function ProjectDetailView({ detailedProject }: Prop) {
       </div>
       <Image
         className=""
-        src={"/projectImageDefault.svg"}
+        src={
+          detailedProject.projectFileUrl
+            ? detailedProject.projectFileUrl
+            : "/projectImageDefault.svg"
+        }
         alt="This is project image"
         width={741}
         height={270}
