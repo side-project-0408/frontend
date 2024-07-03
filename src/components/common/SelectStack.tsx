@@ -36,7 +36,7 @@ const stackBox = [
       { text: "mysql" },
       { text: "mongodb" },
       { text: "python" },
-      { text: "diango" },
+      { text: "django" },
       { text: "php" },
       { text: "graphql" },
       { text: "firebase" },
