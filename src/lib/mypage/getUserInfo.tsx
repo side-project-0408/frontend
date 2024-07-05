@@ -1,7 +1,9 @@
 import { QueryFunctionContext } from "@tanstack/react-query";
+import { getCookie } from "cookies-next";
 
 export const getUserInfo = async ({ queryKey }: QueryFunctionContext) => {
-  const [_1, _2, access_token] = queryKey;
+  const token = getCookie("access_token");
+  const [_1, _2] = queryKey;
   const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/users`, {
     next: {
       tags: ["get", "userinfo"],
@@ -10,7 +12,7 @@ export const getUserInfo = async ({ queryKey }: QueryFunctionContext) => {
     cache: "no-store",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${access_token}`,
+      Authorization: `Bearer ${token}`,
     },
   });
   if (!res.ok) {
