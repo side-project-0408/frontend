@@ -7,13 +7,7 @@ import { getHotProjects } from "../lib/project/getHotProjects";
 import { IProjects } from "@/model/projects";
 import Banner from "@/components/common/Banner";
 
-type Props = {
-  searchParams: {
-    size: string;
-  };
-};
-
-export default async function Home({ searchParams }: Props) {
+export default async function Home() {
   const queryClient = new QueryClient();
 
   await queryClient.prefetchQuery({
@@ -36,7 +30,7 @@ export default async function Home({ searchParams }: Props) {
             <Link href={`/people`}>전체보기</Link>
           </div>
           <div className="flex flex-wrap items-center gap-[9px]">
-            <HotPeople searchParams={searchParams} />
+            <HotPeople />
           </div>
         </div>
         <div className="flex flex-col gap-[20px]">
