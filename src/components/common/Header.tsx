@@ -1,9 +1,26 @@
+"use client";
 import { getCookie } from "cookies-next";
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 export default function Header() {
-  const accessToken = getCookie("access_token");
+  const [accessToken, setAccessToken] = useState<string | null>(null);
+
+  useEffect(() => {
+    const token = getCookie("access_token");
+    setAccessToken(token ? token : null);
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const token = getCookie("access_token");
+      setAccessToken(token ? token : null);
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <nav className="sticky top-0 z-[3] flex h-[80px] w-full flex-row items-center justify-center border-b-[1px] border-[#E4E4E4] bg-neutral-white-0 py-3">
       <div className="flex flex-1 flex-row items-center justify-center gap-[40px]">
@@ -23,9 +40,9 @@ export default function Header() {
           </section>
           <section className="flex gap-2.5">
             {accessToken ? (
-              <Link href="/login">로그인</Link>
-            ) : (
               <Link href="/logout">로그아웃</Link>
+            ) : (
+              <Link href="/login">로그인</Link>
             )}
             <Link href="/mypage">마이페이지</Link>
           </section>
