@@ -10,9 +10,9 @@ export default function LikePeople() {
     GetPeoples,
     Error,
     GetPeoples,
-    [string, string, string]
+    [string, string]
   >({
-    queryKey: ["get", "likepeoples", access_token],
+    queryKey: ["get", "likepeoples"],
     queryFn: getLikePeoples,
   });
   return (
