@@ -56,4 +56,5 @@ export const SELECT_OPTION: readonly Option[] = [
   { label: "Figma", value: "figma" },
   { label: "Zeplin", value: "zeplin" },
   { label: "Jest", value: "jest" },
+  { label: "C", value: "C" },
 ];
