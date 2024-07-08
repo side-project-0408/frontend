@@ -6,15 +6,8 @@ import { useQuery } from "@tanstack/react-query";
 import { getCookie } from "cookies-next";
 
 export default function UserInfoPage() {
-  const access_token = getCookie("access_token") as string;
-
-  const { data: user } = useQuery<
-    GetUsers,
-    Error,
-    GetUsers,
-    [string, string, string]
-  >({
-    queryKey: ["get", "userinfo", access_token],
+  const { data: user } = useQuery<GetUsers, Error, GetUsers, [string, string]>({
+    queryKey: ["get", "userinfo"],
     queryFn: getUserInfo,
   });
   return <UserInfo user={user?.data!!} />;

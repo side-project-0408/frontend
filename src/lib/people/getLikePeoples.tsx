@@ -1,10 +1,10 @@
 import { QueryFunctionContext } from "@tanstack/react-query";
+import { getCookie } from "cookies-next";
 
 export const getLikePeoples = async ({
   queryKey,
-}: QueryFunctionContext<[string, string, string]>) => {
-  const [, , access_token] = queryKey;
-
+}: QueryFunctionContext<[string, string]>) => {
+  const token = getCookie("access_token");
   const defaultParams = {
     page: "0",
     size: "10",
@@ -22,13 +22,10 @@ export const getLikePeoples = async ({
       cache: "no-store",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${access_token}`,
+        Authorization: `Bearer ${token}`,
       },
     },
   );
-  if (!res.ok) {
-    throw new Error("get likepeoples 실패");
-  }
   return res.json();
 };
 

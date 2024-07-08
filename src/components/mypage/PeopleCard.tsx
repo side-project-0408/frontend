@@ -8,13 +8,8 @@ import NoDataAlert from "../common/NoDataAlert";
 export default function PeopleCard() {
   const access_token = getCookie("access_token") as string;
 
-  const { data } = useQuery<
-    GetPeoples,
-    Error,
-    GetPeoples,
-    [string, string, string]
-  >({
-    queryKey: ["get", "likepeoples", access_token],
+  const { data } = useQuery<GetPeoples, Error, GetPeoples, [string, string]>({
+    queryKey: ["get", "likepeoples"],
     queryFn: getLikePeoples,
     enabled: !!access_token,
   });

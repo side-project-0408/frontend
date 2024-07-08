@@ -1,3 +1,4 @@
+"use client";
 import HashTag from "../common/HashTag";
 import newIcon from "../../../public/image/newIcon.svg";
 import { GetPeoplesData } from "@/model/peoples";

@@ -52,9 +52,9 @@ export default function PeoplePosts({ userId }: Props) {
     GetPeoples,
     Error,
     GetPeoples,
-    [string, string, string]
+    [string, string]
   >({
-    queryKey: ["get", "likepeoples", access_token],
+    queryKey: ["get", "likepeoples"],
     queryFn: getLikePeoples,
   });
 
@@ -77,7 +77,7 @@ export default function PeoplePosts({ userId }: Props) {
     },
     onSuccess() {
       queryClient.invalidateQueries({
-        queryKey: ["get", "likepeoples", access_token],
+        queryKey: ["get", "likepeoples"],
       });
       alert("찜하기 성공");
     },
@@ -98,7 +98,7 @@ export default function PeoplePosts({ userId }: Props) {
     },
     onSuccess() {
       queryClient.invalidateQueries({
-        queryKey: ["get", "likepeoples", access_token],
+        queryKey: ["get", "likepeoples"],
       });
       alert("찜하기 삭제 완료");
     },
