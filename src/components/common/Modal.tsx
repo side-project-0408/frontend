@@ -7,7 +7,7 @@ type Props = {
   onClickHandler?: () => void;
   className?: string;
 };
-export function Modal({ children, onClickHandler, className }: Props) {
+export default function Modal({ children, onClickHandler, className }: Props) {
   const [close, setClose] = useState<boolean>(false);
   return (
     <div
