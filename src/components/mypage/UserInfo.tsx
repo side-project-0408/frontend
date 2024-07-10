@@ -12,24 +12,24 @@ import { HiOutlinePencilSquare } from "react-icons/hi2";
 import SelectBox from "../common/SelectBox";
 import { IoMdCloseCircle } from "react-icons/io";
 import { FaCirclePlus } from "react-icons/fa6";
-import Select from "react-select";
-import makeAnimated from "react-select/animated";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import AddInput from "./AddInput";
 import { getCookie } from "cookies-next";
 import { useRouter } from "next/navigation";
-import {
-  SELECT_OPTION,
-  SELECT_POSITION_OPTION,
-  YEAR_OPTION,
-} from "@/constants";
+import { SELECT_POSITION_OPTION, YEAR_OPTION } from "@/constants";
 import getNicknameCheck from "@/lib/mypage/getNicknameCheck";
+import GetOffer from "./GetOffer";
+import dynamic from "next/dynamic";
+import { MultiValue } from "react-select";
+import { blurLogoUrl } from "../../../public/blurLogoUrl";
 
 type Props = {
   user: GetUserData;
 };
 
 type ImageFile = File | null;
+
+const MultiSelectBox = dynamic(() => import("../common/MultiSelectBox"));
 
 export default function UserInfo({ user }: Props) {
   const queryClient = useQueryClient();
@@ -73,14 +73,23 @@ export default function UserInfo({ user }: Props) {
   });
 
   const handleDupliCheck = async () => {
-    setDupliCheck(true);
     const { data } = await refetchNicknameCheck();
     if (data?.data === true) {
       alert("사용할 수 있는 닉네임 입니다.");
+      setDupliCheck(true);
     } else {
       alert("사용 불가능한 닉네임 입니다.");
       setDupliCheck(false);
     }
+  };
+
+  const handleTectStackChange = (
+    selectedOption: MultiValue<{ label: string; value: string }>,
+  ) => {
+    setProduct((prev) => ({
+      ...prev,
+      techStack: selectedOption.map((opt) => opt.value).join(","),
+    }));
   };
 
   const emailCheckMutation = useMutation({
@@ -135,7 +144,7 @@ export default function UserInfo({ user }: Props) {
         employmentStatus: product.employmentStatus,
         year: product.year || year,
         links: product.links || links,
-        alarmStatus: product.alarmStatus || alarmStatus,
+        alarmStatus: product.alarmStatus,
         content: product.content || content,
         softSkill: product.softSkill || softSkill,
         email: product.email || email,
@@ -166,20 +175,18 @@ export default function UserInfo({ user }: Props) {
     },
   });
 
-  const animatedComponents = makeAnimated();
-
   const handleSubmit: FormEventHandler = (e) => {
     e.preventDefault();
     if (!product.position || !product.techStack || !product.softSkill) {
       setErrorMessage(true);
-    } else if (dupliCheck === false) {
+    } else if (product.nickname !== nickname && !dupliCheck) {
       alert("닉네임 중복 체크가 필요합니다.");
     } else {
       mutation.mutate(e);
     }
   };
 
-  const initialTechStack = techStack?.split(",").map((item) => ({
+  const defaultValues = techStack?.split(",").map((item) => ({
     label: item,
     value: item,
   }));
@@ -214,27 +221,18 @@ export default function UserInfo({ user }: Props) {
           ref={fileInputRef}
           className="hidden"
         />
-        {image ? (
-          <div className="h-[100px] w-[100px]">
-            <Image
-              src={URL.createObjectURL(image)}
-              width={100}
-              height={100}
-              className="cursor-pointer rounded-full border"
-              alt="유저이미지"
-            />
-          </div>
-        ) : (
-          <div className="h-[100px] w-[100px]">
-            <Image
-              className="cursor-pointer rounded-full border"
-              src={userFileUrl}
-              width={100}
-              height={100}
-              alt="유저이미지"
-            />
-          </div>
-        )}
+        <div className="relative h-[100px] w-[100px]">
+          <Image
+            className="cursor-pointer rounded-full border object-cover"
+            src={image ? URL.createObjectURL(image) : userFileUrl}
+            priority
+            alt="유저이미지"
+            fill
+            placeholder="blur"
+            blurDataURL={blurLogoUrl}
+            sizes="100px"
+          />
+        </div>
         <HiOutlinePencilSquare
           onClick={() => {
             fileInputRef.current?.click();
@@ -243,7 +241,7 @@ export default function UserInfo({ user }: Props) {
         />
       </div>
       <div className="flex flex-col gap-2">
-        <label htmlFor="" className="text-sm font-bold">
+        <label htmlFor="nickname" className="text-sm font-bold">
           닉네임
         </label>
         <input
@@ -256,13 +254,14 @@ export default function UserInfo({ user }: Props) {
         <button
           onClick={handleDupliCheck}
           type="button"
-          className="w-fit rounded-md border p-2 text-xs transition hover:bg-neutral-orange-500 hover:text-neutral-white-0"
+          disabled={product.nickname === nickname}
+          className={`w-fit rounded-md border p-2 text-xs transition hover:bg-neutral-orange-500 hover:text-neutral-white-0 disabled:bg-[#e7e7e7] disabled:text-white disabled:hover:bg-[#e7e7e7]`}
         >
           닉네임 중복 확인
         </button>
       </div>
       <div className="flex flex-col gap-2">
-        <label htmlFor="" className="text-sm font-bold">
+        <label htmlFor="email" className="text-sm font-bold">
           이메일
         </label>
         <input
@@ -272,13 +271,13 @@ export default function UserInfo({ user }: Props) {
           onChange={handleChange}
           className="h-[55px] w-[400px] rounded-md border pl-[8px] placeholder:text-neutral-black-800"
         />
-        {/* <button
+        <button
           onClick={handleEmail}
           type="button"
           className="w-fit rounded-md border p-2 text-xs transition hover:bg-neutral-orange-500 hover:text-neutral-white-0"
         >
           이메일 변경 하기
-        </button> */}
+        </button>
       </div>
       <div className="flex flex-col gap-2">
         <label htmlFor="" className="text-sm font-bold">
@@ -349,29 +348,10 @@ export default function UserInfo({ user }: Props) {
         <label htmlFor="" className="text-sm font-bold">
           기술스택
         </label>
-        <Select
-          instanceId="techStack"
-          key={selectKey} // Force re-render by changing key
-          defaultValue={initialTechStack}
-          options={SELECT_OPTION}
-          components={animatedComponents}
-          isMulti
-          onChange={(selectedOption) => {
-            setProduct((prev) => ({
-              ...prev,
-              techStack: selectedOption.map((opt) => opt.value).join(","),
-            }));
-          }}
-          styles={{
-            control: (baseStyles) => ({
-              ...baseStyles,
-              width: "400px",
-              maxWidth: "400px",
-              minHeight: "55px",
-              display: "flex",
-              flexWrap: "nowrap",
-            }),
-          }}
+        <MultiSelectBox
+          defaultValues={defaultValues}
+          selectKey={selectKey}
+          multiSelectHandler={handleTectStackChange}
         />
       </div>
       <div className="flex flex-col gap-2">
@@ -440,28 +420,7 @@ export default function UserInfo({ user }: Props) {
         </label>
         <AddInput linkUrls={links} setLink={handleLinkChange} />
       </div>
-      <div className="mt-[22px] flex items-center gap-6">
-        <label htmlFor="alarmStatus" className="text-sm font-bold">
-          제안 받기
-        </label>
-        <button
-          type="button"
-          onClick={toggleOffer}
-          className={`relative h-[26px] w-[72px] rounded-md border p-2 hover:shadow-md ${product.alarmStatus ? "bg-neutral-orange-500" : "bg-neutral-white-0"}`}
-        >
-          <div
-            className={` absolute left-[1px] top-[-1px] z-[1] h-[26px] w-[34px] rounded-lg transition-transform ${product.alarmStatus ? " translate-x-[35px] bg-neutral-white-0" : "translate-x-0 bg-neutral-gray-50"}`}
-          />
-          <div className="absolute left-[9px] top-[5px] flex gap-[12px]">
-            <span
-              className={`text-xs ${product.alarmStatus && "text-neutral-white-0"} font-medium`}
-            >
-              ON
-            </span>
-            <span className="text-xs font-medium">OFF</span>
-          </div>
-        </button>
-      </div>
+      <GetOffer product={product} offerHandler={toggleOffer} />
       {errorMessage && (
         <p className="text-[red]">기술스택 직무 소프트스킬은 필수값입니다.</p>
       )}

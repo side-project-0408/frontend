@@ -1,6 +1,4 @@
 "use client";
-import SelectBox from "@/components/common/SelectBox";
-import SelectStack from "@/components/common/SelectStack";
 import Peoples from "@/components/people/Peoples";
 import SearchForm from "@/components/common/SearchForm";
 import { useRouter } from "next/navigation";
@@ -13,6 +11,7 @@ import {
 } from "react";
 import { SELECT_POSITION_OPTION } from "@/constants";
 import { convertPositionKorToEng } from "@/lib/convertPositionKrToEng";
+import dynamic from "next/dynamic";
 
 type Props = {
   searchParams: {
@@ -25,6 +24,12 @@ type Props = {
   };
 };
 
+const SelectStack = dynamic(() => import("@/components/common/SelectStack"), {
+  ssr: false,
+});
+const SelectBox = dynamic(() => import("@/components/common/SelectBox"), {
+  ssr: false,
+});
 export default function PeoplePage({ searchParams }: Props) {
   const router = useRouter();
   const [optSelected, setOptSelected] = useState<string>("");

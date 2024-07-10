@@ -6,9 +6,8 @@ import Link from "next/link";
 import logo from "../../public/logo.svg";
 import { MSWComponent } from "@/mocks/MSWComponent";
 import ReactQueryProvider from "@/components/ReactQueryProvider";
-import RegisterButton from "@/components/register/RegisterButton";
 import Header from "@/components/common/Header";
-
+import FetchLoader from "@/components/common/FetchLoader";
 const pretendard = localFont({
   src: [
     {
@@ -35,9 +34,8 @@ export const metadata: Metadata = {
     template: "match-mate | %s",
   },
   description: "이제 직접 제안받고 프로젝트해요!",
-  //파비콘 추후에 생성
   icons: {
-    icon: "",
+    icon: "/favicon.ico",
   },
 };
 
@@ -52,13 +50,14 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${pretendard.className} items-center bg-white`}>
         <ReactQueryProvider>
+          <FetchLoader />
           <div className="mx-auto max-w-[1200px]">
             <MSWComponent />
             <Header />
             <div className="mt-[30px] bg-white">{children}</div>
             {modal}
           </div>
-          <footer className="mt-[100px] flex w-full bg-gray-100 py-5">
+          <footer className="mt-[100px] flex h-[130px] w-full bg-gray-100 py-5">
             <div className="mx-auto flex max-w-[1200px] flex-1 flex-row justify-between">
               <section className="flex flex-col gap-4">
                 <Image src={logo} alt="footerlogo" width={50} height={50} />
