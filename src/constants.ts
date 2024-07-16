@@ -26,7 +26,7 @@ export const YEAR_OPTION = [
 export const SELECT_OPTION: readonly Option[] = [
   { label: "React", value: "react" },
   { label: "TypeScript", value: "typescript" },
-  { label: "JavaScript", value: "javascript" },
+  { label: "JavaScript", value: "jsc" },
   { label: "Vue", value: "vue" },
   { label: "Svelte", value: "svelte" },
   { label: "Nextjs", value: "nextjs" },

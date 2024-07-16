@@ -15,7 +15,7 @@ const stackBox = [
   {
     title: "프론트엔드",
     stack: [
-      { text: "javascript" },
+      { text: "jsc" },
       { text: "nextjs" },
       { text: "react" },
       { text: "vue" },
@@ -127,7 +127,12 @@ export default function SelectStack({ optSelected, setOptSelected }: Props) {
                 className="flex w-fit items-center px-3 py-2"
                 onClick={() => toggleOption(stackList.text)}
               >
-                <TechStack techStack={stackList.text} showText />
+                <TechStack
+                  techStack={
+                    stackList.text === "jsc" ? "JavaScript" : stackList.text
+                  }
+                  showText
+                />
               </li>
             ))}
           </ul>
@@ -137,7 +142,7 @@ export default function SelectStack({ optSelected, setOptSelected }: Props) {
                 key={selec}
                 className="flex items-center gap-1 rounded-2xl border px-2 py-1 text-sm"
               >
-                <h1>{selec}</h1>
+                <h1>{selec === "jsc" ? "JavaScript" : selec}</h1>
                 <IoMdCloseCircle onClick={() => onClickDeleteStack(selec)} />
               </li>
             ))}
