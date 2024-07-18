@@ -30,7 +30,6 @@ const ReactQueryProvider = ({ children }: Props) => {
             isRetrying = true;
             try {
               const accessToken = await refreshAuthToken();
-              console.log("new accesstoken", accessToken);
               await query.fetch();
             } catch (refreshError) {
               console.error("refresh 갱신 실패", refreshError);
