@@ -15,7 +15,7 @@ import { getCookie } from "cookies-next";
 import PeopleLike from "./PeopleLike";
 
 type Props = {
-  userId: number;
+  userId: string;
 };
 
 export default function PeoplePosts({ userId }: Props) {
@@ -24,7 +24,7 @@ export default function PeoplePosts({ userId }: Props) {
     GetPeoplePost,
     Object,
     GetPeoplePost,
-    [_1: string, _2: string, _3: number]
+    [_1: string, _2: string, _3: string]
   >({
     queryKey: ["get", "peoplesDetail", userId],
     queryFn: getPeopleDetail,
@@ -45,7 +45,7 @@ export default function PeoplePosts({ userId }: Props) {
   } = data?.data ?? {};
 
   const proposal = useMutation({
-    mutationFn: (userId: number) => {
+    mutationFn: (userId: string) => {
       return fetch(
         `${process.env.NEXT_PUBLIC_BASE_URL}/proposal/send/${userId}`,
         {
