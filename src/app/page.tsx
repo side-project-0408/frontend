@@ -8,8 +8,6 @@ import Banner from "@/components/common/Banner";
 import dynamic from "next/dynamic";
 import Loading from "@/components/common/Loading";
 import NoDataAlert from "@/components/common/NoDataAlert";
-import ProjectDetailEdit from "@/components/project/ProjectDetailEdit";
-import Button from "@/components/common/Button";
 
 const HotPeople = dynamic(() => import("@/components/people/HotPeople"), {
   loading: () => <Loading />,
