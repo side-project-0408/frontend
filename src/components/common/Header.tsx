@@ -22,7 +22,7 @@ export default function Header() {
   }, []);
 
   return (
-    <nav className="sticky top-0 z-[3] flex h-[80px] w-full flex-row items-center justify-center border-b-[1px] border-[#E4E4E4] bg-neutral-white-0 py-3">
+    <nav className="sticky top-0 z-[3] flex h-[80px] w-full flex-row items-center justify-center border-b-[1px] border-[#E4E4E4] bg-neutral-white-0">
       <div className="flex flex-1 flex-row items-center justify-center gap-[40px]">
         <Link href="/">
           <Image
@@ -39,12 +39,26 @@ export default function Header() {
             <Link href={"/people"}>People</Link>
           </section>
           <section className="flex gap-2.5">
-            {accessToken ? (
-              <Link href="/logout">로그아웃</Link>
-            ) : (
-              <Link href="/login">로그인</Link>
+            <Link
+              href="/register"
+              className="rounded-2xl border border-transparent bg-neutral-orange-500 px-3 py-1 font-semibold text-neutral-white-0"
+            >
+              프로젝트 모집
+            </Link>
+            <Link
+              href={accessToken ? "/logout" : "/login"}
+              className="rounded-2xl border px-3 py-1 font-semibold"
+            >
+              {accessToken ? "로그아웃" : "로그인"}
+            </Link>
+            {accessToken && (
+              <Link
+                href="/mypage"
+                className="rounded-2xl border px-3 py-1 font-semibold"
+              >
+                마이페이지
+              </Link>
             )}
-            <Link href="/mypage">마이페이지</Link>
           </section>
         </div>
       </div>
