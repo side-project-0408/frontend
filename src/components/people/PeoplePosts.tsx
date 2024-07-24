@@ -1,37 +1,34 @@
 "use client";
 import getPeopleDetail from "@/lib/people/getPeopleDetail";
-import { GetPeoplePost, GetPeoples } from "@/model/peoples";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { GetPeoplePost } from "@/model/peoples";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import BlueTextBox from "../common/BlueTextBox";
 import HashTag from "../common/HashTag";
 import HeartEyeIconBox from "../common/HeartEyeIconBox";
 import heartIcon from "../../../public/image/heart.svg";
-import fillHeartIcon from "../../../public/image/fillHeart.svg";
 import eyeIcon from "../../../public/image/eye.svg";
 import TechStack from "../common/TechStack";
 import Link from "next/link";
 import { MouseEventHandler } from "react";
-import getLikePeoples from "@/lib/people/getLikePeoples";
 import { getCookie } from "cookies-next";
+import PeopleLike from "./PeopleLike";
 
 type Props = {
-  userId: string;
+  userId: number;
 };
 
 export default function PeoplePosts({ userId }: Props) {
   const access_token = getCookie("access_token") as string;
-
   const { data } = useQuery<
     GetPeoplePost,
     Object,
     GetPeoplePost,
-    [_1: string, _2: string, _3: string]
+    [_1: string, _2: string, _3: number]
   >({
     queryKey: ["get", "peoplesDetail", userId],
     queryFn: getPeopleDetail,
   });
-
   const {
     content,
     nickname,
@@ -44,77 +41,11 @@ export default function PeoplePosts({ userId }: Props) {
     position,
     alarmStatus,
     year,
+    userId: dataUserId,
   } = data?.data ?? {};
 
-  const queryClient = useQueryClient();
-
-  const { data: likeQuery } = useQuery<
-    GetPeoples,
-    Error,
-    GetPeoples,
-    [string, string]
-  >({
-    queryKey: ["get", "likepeoples"],
-    queryFn: getLikePeoples,
-  });
-
-  const liked = !!likeQuery?.data.find(
-    (item) => item.userId === Number(userId),
-  );
-
-  const like = useMutation({
-    mutationFn: (userId: string) => {
-      return fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/users/favorite?favoriteId=${userId}`,
-        {
-          method: "post",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${access_token}`,
-          },
-        },
-      );
-    },
-    onSuccess() {
-      queryClient.invalidateQueries({
-        queryKey: ["get", "likepeoples"],
-      });
-      alert("찜하기 성공");
-    },
-  });
-
-  const unLike = useMutation({
-    mutationFn: (userId: string) => {
-      return fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/users/favorite?favoriteId=${userId}`,
-        {
-          method: "delete",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${access_token}`,
-          },
-        },
-      );
-    },
-    onSuccess() {
-      queryClient.invalidateQueries({
-        queryKey: ["get", "likepeoples"],
-      });
-      alert("찜하기 삭제 완료");
-    },
-  });
-
-  const onLike: MouseEventHandler<HTMLButtonElement> = (e) => {
-    e.preventDefault();
-    if (liked) {
-      unLike.mutate(userId);
-    } else {
-      like.mutate(userId);
-    }
-  };
-
   const proposal = useMutation({
-    mutationFn: (userId: string) => {
+    mutationFn: (userId: number) => {
       return fetch(
         `${process.env.NEXT_PUBLIC_BASE_URL}/proposal/send/${userId}`,
         {
@@ -201,27 +132,10 @@ export default function PeoplePosts({ userId }: Props) {
             >
               {alarmStatus ? "제안하기" : "제안불가"}
             </button>
-            <button
-              onClick={onLike}
-              className="flex h-[58px] w-[58px] flex-col items-center justify-center rounded-md border"
-            >
-              {liked ? (
-                <Image
-                  src={fillHeartIcon}
-                  alt="하트아이콘"
-                  width={20}
-                  height={20}
-                />
-              ) : (
-                <Image
-                  src={heartIcon}
-                  alt="하트아이콘"
-                  width={20}
-                  height={20}
-                />
-              )}
-              <h5 className="text-[12px]">{favoriteCount}</h5>
-            </button>
+            <div className="flex h-[58px] w-[58px] flex-col items-center justify-center rounded-md border">
+              <PeopleLike userId={dataUserId} />
+              <h5 className="text-[12px] font-semibold">{favoriteCount}</h5>
+            </div>
           </div>
         </div>
       )}
