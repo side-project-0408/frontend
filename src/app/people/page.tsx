@@ -1,6 +1,5 @@
 "use client";
 import Peoples from "@/components/people/Peoples";
-import SearchForm from "@/components/common/SearchForm";
 import { useRouter } from "next/navigation";
 import {
   FormEventHandler,
@@ -30,6 +29,11 @@ const SelectStack = dynamic(() => import("@/components/common/SelectStack"), {
 const SelectBox = dynamic(() => import("@/components/common/SelectBox"), {
   ssr: false,
 });
+
+const SearchForm = dynamic(() => import("@/components/common/SearchForm"), {
+  ssr: false,
+});
+
 export default function PeoplePage({ searchParams }: Props) {
   const router = useRouter();
   const [optSelected, setOptSelected] = useState<string>("");
