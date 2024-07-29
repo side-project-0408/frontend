@@ -4,6 +4,7 @@ import Image from "next/image";
 import {
   FormEvent,
   FormEventHandler,
+  useCallback,
   useEffect,
   useRef,
   useState,
@@ -42,6 +43,7 @@ export default function UserInfo({ user }: Props) {
   const [dupliCheck, setDupliCheck] = useState(false);
   const [image, setImage] = useState<ImageFile>(null);
   const [errorMessage, setErrorMessage] = useState(false);
+  const [emailCode, setEmailCode] = useState(false);
   const {
     alarmStatus,
     content,
@@ -57,6 +59,7 @@ export default function UserInfo({ user }: Props) {
     year,
     email,
   } = user ?? {};
+
   const [selectKey, setSelectKey] = useState(0);
 
   const [product, setProduct] = useState<GetUserData>(user ?? {});
@@ -83,14 +86,23 @@ export default function UserInfo({ user }: Props) {
     }
   };
 
-  const handleTectStackChange = (
-    selectedOption: MultiValue<{ label: string; value: string }>,
-  ) => {
-    setProduct((prev) => ({
-      ...prev,
-      techStack: selectedOption.map((opt) => opt.value).join(","),
-    }));
-  };
+  const handleTechStackChange = useCallback(
+    (newValue: MultiValue<{ label: string; value: string }>) => {
+      setProduct((prev) => ({
+        ...prev,
+        techStack: newValue.map((opt) => opt.value).join(","),
+      }));
+    },
+    [product.techStack],
+  );
+  useEffect(() => {
+    console.log("handleTextStackchage 렌더링 되었습니다.");
+  }, [handleTechStackChange]);
+
+  const defaultValues = techStack?.split(",").map((item) => ({
+    label: item === "jsc" ? "javascript" : item,
+    value: item,
+  }));
 
   const emailCheckMutation = useMutation({
     mutationFn: async (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -105,10 +117,11 @@ export default function UserInfo({ user }: Props) {
         },
       );
     },
-    onSuccess(data) {
+    onSuccess() {
       alert(
         "이메일 인증 번호가 전송 되었습니다. 이메일 확인 후 인증번호를 입력해주세요",
       );
+      setEmailCode(true);
     },
   });
 
@@ -124,12 +137,12 @@ export default function UserInfo({ user }: Props) {
     setProduct(user ?? {});
   }, [user]);
 
-  const toggleOffer = () => {
+  const toggleOffer = useCallback(() => {
     setProduct((prev) => ({
       ...prev,
       alarmStatus: !prev.alarmStatus,
     }));
-  };
+  }, [product.alarmStatus]);
 
   const mutation = useMutation({
     mutationFn: async (e: FormEvent) => {
@@ -139,7 +152,7 @@ export default function UserInfo({ user }: Props) {
       const dto = {
         nickname: product.nickname || nickname,
         userFileUrl: image || userFileUrl,
-        techStack: product.techStack || techStack,
+        techStack: product.techStack,
         position: product.position || position,
         employmentStatus: product.employmentStatus,
         year: product.year || year,
@@ -185,11 +198,6 @@ export default function UserInfo({ user }: Props) {
       mutation.mutate(e);
     }
   };
-
-  const defaultValues = techStack?.split(",").map((item) => ({
-    label: item,
-    value: item,
-  }));
 
   const handleLinkChange = (newLinks: string[]) => {
     setProduct((prev) => ({
@@ -278,6 +286,12 @@ export default function UserInfo({ user }: Props) {
         >
           이메일 변경 하기
         </button>
+        {emailCode && (
+          <input
+            type="text"
+            className="h-[55px] w-[400px] rounded-md border pl-[8px] placeholder:text-neutral-black-800"
+          />
+        )}
       </div>
       <div className="flex flex-col gap-2">
         <label htmlFor="" className="text-sm font-bold">
@@ -286,10 +300,13 @@ export default function UserInfo({ user }: Props) {
         <SelectBox
           options={SELECT_POSITION_OPTION}
           optSelected={product.position}
-          title={position}
-          onClick={(value) => {
-            setProduct((prev) => ({ ...prev, position: value }));
-          }}
+          title={position ? position : "포지션을 선택해 보세요!"}
+          onClick={useCallback(
+            (value) => {
+              setProduct((prev) => ({ ...prev, position: value }));
+            },
+            [product.position],
+          )}
           width={400}
           height={50}
           className="rounded-md"
@@ -300,9 +317,12 @@ export default function UserInfo({ user }: Props) {
           경력
         </label>
         <SelectBox
-          onClick={(value) => {
-            setProduct((prev) => ({ ...prev, year: value }));
-          }}
+          onClick={useCallback(
+            (value) => {
+              setProduct((prev) => ({ ...prev, year: value }));
+            },
+            [product.year],
+          )}
           options={YEAR_OPTION}
           title={year}
           optSelected={product.year}
@@ -351,7 +371,7 @@ export default function UserInfo({ user }: Props) {
         <MultiSelectBox
           defaultValues={defaultValues}
           selectKey={selectKey}
-          multiSelectHandler={handleTectStackChange}
+          multiSelectHandler={handleTechStackChange}
         />
       </div>
       <div className="flex flex-col gap-2">
@@ -420,7 +440,7 @@ export default function UserInfo({ user }: Props) {
         </label>
         <AddInput linkUrls={links} setLink={handleLinkChange} />
       </div>
-      <GetOffer product={product} offerHandler={toggleOffer} />
+      <GetOffer alarmStatus={product.alarmStatus} offerHandler={toggleOffer} />
       {errorMessage && (
         <p className="text-[red]">기술스택 직무 소프트스킬은 필수값입니다.</p>
       )}

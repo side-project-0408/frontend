@@ -1,10 +1,11 @@
 import { GetUserData } from "@/model/userInfo";
+import { memo } from "react";
 
 type Props = {
   offerHandler: () => void;
-  product: GetUserData;
+  alarmStatus: boolean;
 };
-export default function GetOffer({ offerHandler, product }: Props) {
+export function GetOffer({ offerHandler, alarmStatus }: Props) {
   return (
     <div className="mt-[22px] flex items-center gap-6">
       <label htmlFor="alarmStatus" className="text-sm font-bold">
@@ -13,14 +14,14 @@ export default function GetOffer({ offerHandler, product }: Props) {
       <button
         type="button"
         onClick={offerHandler}
-        className={`relative h-[26px] w-[72px] rounded-md border p-2 hover:shadow-md ${product.alarmStatus ? "bg-neutral-orange-500" : "bg-neutral-white-0"}`}
+        className={`relative h-[26px] w-[72px] rounded-md border p-2 hover:shadow-md ${alarmStatus ? "bg-neutral-orange-500" : "bg-neutral-white-0"}`}
       >
         <div
-          className={` absolute left-[1px] top-[-1px] z-[1] h-[26px] w-[34px] rounded-lg transition-transform ${product.alarmStatus ? " translate-x-[35px] bg-neutral-white-0" : "translate-x-0 bg-neutral-gray-50"}`}
+          className={` absolute left-[1px] top-[-1px] z-[1] h-[26px] w-[34px] rounded-lg transition-transform ${alarmStatus ? " translate-x-[35px] bg-neutral-white-0" : "translate-x-0 bg-neutral-gray-50"}`}
         />
         <div className="absolute left-[9px] top-[5px] flex gap-[12px]">
           <span
-            className={`text-xs ${product.alarmStatus && "text-neutral-white-0"} font-medium`}
+            className={`text-xs ${alarmStatus && "text-neutral-white-0"} font-medium`}
           >
             ON
           </span>
@@ -30,3 +31,5 @@ export default function GetOffer({ offerHandler, product }: Props) {
     </div>
   );
 }
+
+export default memo(GetOffer);
