@@ -1,6 +1,7 @@
 "use client";
 import { SELECT_OPTION } from "@/constants";
 import dynamic from "next/dynamic";
+import { memo } from "react";
 import { MultiValue } from "react-select";
 import makeAnimated from "react-select/animated";
 
@@ -17,7 +18,7 @@ type Props = {
 
 const Select = dynamic(() => import("react-select"), { ssr: false });
 
-export default function MultiSelectBox({
+export function MultiSelectBox({
   defaultValues,
   selectKey,
   multiSelectHandler,
@@ -30,7 +31,11 @@ export default function MultiSelectBox({
       options={SELECT_OPTION}
       components={makeAnimated()}
       isMulti
-      onChange={() => multiSelectHandler}
+      onChange={(newValue) =>
+        multiSelectHandler(
+          newValue as MultiValue<{ label: string; value: string }>,
+        )
+      }
       styles={{
         control: (baseStyles) => ({
           ...baseStyles,
@@ -44,3 +49,5 @@ export default function MultiSelectBox({
     />
   );
 }
+
+export default memo(MultiSelectBox);
