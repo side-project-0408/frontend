@@ -22,8 +22,8 @@ export default function Header() {
   }, []);
 
   return (
-    <nav className="sticky top-0 z-[3] flex h-[80px] w-full flex-row items-center justify-center border-b-[1px] border-[#E4E4E4] bg-neutral-white-0">
-      <div className="flex flex-1 flex-row items-center justify-center gap-[40px]">
+    <nav className="sticky top-0 z-[3] flex h-[80px] w-full flex-row items-center justify-center border-b-[1px] border-[#E4E4E4] bg-neutral-white-0 drop-shadow-md">
+      <div className="mx-auto flex max-w-[1200px] flex-1 flex-row items-center justify-center gap-[40px]">
         <Link href="/">
           <Image
             src={`https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/v1719237353/match-mate/logo_k1evxe.png`}
