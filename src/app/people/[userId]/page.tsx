@@ -1,4 +1,4 @@
-import BackButton from "@/components/common/BackButton";
+import Button from "@/components/common/Button";
 import PeoplePosts from "@/components/people/PeoplePosts";
 import getPeopleDetail from "@/lib/people/getPeopleDetail";
 import {
@@ -9,7 +9,7 @@ import {
 
 type Props = {
   params: {
-    userId: string;
+    userId: number;
   };
 };
 export default async function PeopleDetailPage({ params }: Props) {
@@ -26,7 +26,7 @@ export default async function PeopleDetailPage({ params }: Props) {
   return (
     <div className="flex w-full flex-col gap-[20px]">
       <HydrationBoundary state={dehydratedState}>
-        <BackButton />
+        <Button back />
         <PeoplePosts userId={userId} />
       </HydrationBoundary>
     </div>

@@ -1,4 +1,3 @@
-import BackButton from "@/components/common/BackButton";
 import {
   HydrationBoundary,
   QueryClient,
@@ -6,6 +5,7 @@ import {
 } from "@tanstack/react-query";
 import ProjectDetailPageContents from "@/components/project/ProjectDetailPageContents";
 import { getProjectDetail } from "../../../lib/project/getProjectDetail";
+import Button from "@/components/common/Button";
 
 type Props = {
   params: {
@@ -27,7 +27,7 @@ export default async function ProjectDetailPage({
   return (
     <div className="w-full">
       <HydrationBoundary state={dehydratedState}>
-        <BackButton />
+        <Button back />
         <ProjectDetailPageContents projectId={projectId} />
       </HydrationBoundary>
     </div>

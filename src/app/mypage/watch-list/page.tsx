@@ -1,30 +1,30 @@
 "use client";
+import Button from "@/components/common/Button";
 import PeopleCard from "@/components/mypage/PeopleCard";
 import ProjectCard from "@/components/mypage/ProjectCard";
 import { useState } from "react";
 
-const tabMenu = ["people", "project"];
+const tabMenu = [
+  { id: 1, tabMenu: "people" },
+  { id: 2, tabMenu: "project" },
+];
 export default function WatchListPage() {
-  const [selectTab, setSelectTab] = useState<number>(0);
+  const [selectTab, setSelectTab] = useState<number>(1);
   return (
     <div className="flex flex-col gap-10 ">
       <div className="flex justify-center gap-[30px]">
         {tabMenu.map((tab, index) => (
-          <button
-            key={`tab${index}`}
-            onClick={() => setSelectTab(index)}
-            className={`hover:bg-color-orange hover:text-color-white w-[200px] border-b px-2 py-1 text-[15px] font-medium ${
-              index === selectTab
-                ? "text-neutral-orange-500"
-                : "text-neutral-black-800"
-            }`}
+          <Button
+            key={tab.id}
+            onClickHandler={() => setSelectTab(tab.id)}
+            className={`w-[200px] border-b px-2 py-1 ${tab.id === selectTab ? "text-neutral-orange-500" : "text-neutral-black-800"}`}
           >
-            {tab}
-          </button>
+            {tab.tabMenu}
+          </Button>
         ))}
       </div>
-      {selectTab === 0 && <PeopleCard />}
-      {selectTab === 1 && <ProjectCard />}
+      {selectTab === 1 && <PeopleCard />}
+      {selectTab === 2 && <ProjectCard />}
     </div>
   );
 }

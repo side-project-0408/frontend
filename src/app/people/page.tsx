@@ -11,6 +11,7 @@ import {
 import { SELECT_POSITION_OPTION } from "@/constants";
 import { convertPositionKorToEng } from "@/lib/convertPositionKrToEng";
 import dynamic from "next/dynamic";
+import Button from "@/components/common/Button";
 
 type Props = {
   searchParams: {
@@ -38,7 +39,7 @@ export default function PeoplePage({ searchParams }: Props) {
   const router = useRouter();
   const [optSelected, setOptSelected] = useState<string>("");
   const [selectedStack, setSelectedStack] = useState<string[]>([]);
-  const [keyword, setKeyword] = useState<string>("");
+  const [_, setKeyword] = useState<string>("");
   const ref = useRef<any>();
 
   const changeSearchParams = useCallback(
@@ -97,20 +98,20 @@ export default function PeoplePage({ searchParams }: Props) {
         <SearchForm ref={ref} onSubmit={onSubmitSearch} />
       </div>
       <div className="flex justify-end gap-3">
-        <button
+        <Button
           onClick={() => {
             changeSearchParams("sort", "RECENT");
           }}
         >
           최신순
-        </button>
-        <button
+        </Button>
+        <Button
           onClick={() => {
             changeSearchParams("sort", "POPULAR");
           }}
         >
           인기순
-        </button>
+        </Button>
       </div>
       <Peoples searchParams={searchParams} />
     </div>
