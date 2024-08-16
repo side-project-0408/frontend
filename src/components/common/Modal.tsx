@@ -1,6 +1,7 @@
 "use client";
 import { IoClose } from "react-icons/io5";
 import { useState } from "react";
+import Button from "./Button";
 
 type Props = {
   children: React.ReactNode;
@@ -17,7 +18,7 @@ export default function Modal({ children, onClickHandler, className }: Props) {
         className={`absolute left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%] rounded-xl bg-white ${className} p-6`}
       >
         <div className="flex justify-end">
-          <button
+          <Button
             type="button"
             onClick={() => {
               setClose(true);
@@ -27,7 +28,7 @@ export default function Modal({ children, onClickHandler, className }: Props) {
             }}
           >
             <IoClose className="text-[30px]" />
-          </button>
+          </Button>
         </div>
         <div className="h-full">{children}</div>
       </div>

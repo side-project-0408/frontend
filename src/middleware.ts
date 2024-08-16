@@ -46,5 +46,10 @@ export async function middleware(req: NextResponse) {
 }
 
 export const config = {
-  matcher: ["/mypage"],
+  matcher: [
+    "/mypage",
+    "/mypage/user-info",
+    "/mypage/project-write",
+    "/mypage/watch-list",
+  ],
 };

@@ -49,13 +49,15 @@ export default function RootLayout({
       <body className={`${pretendard.className} items-center bg-white`}>
         <ReactQueryProvider>
           <FetchLoader />
-          <div className="mx-auto max-w-[1200px]">
-            {/* <MSWComponent /> */}
+          <div className="flex flex-1 flex-col">
             <Header />
-            <div className="mt-[30px] bg-white">{children}</div>
+            {/* <MSWComponent /> */}
+            <div className="mx-auto mt-[30px] w-full max-w-[1200px] bg-white">
+              {children}
+            </div>
             {modal}
+            <Footer />
           </div>
-          <Footer />
         </ReactQueryProvider>
       </body>
     </html>

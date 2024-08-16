@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, memo } from "react";
 import { IoIosArrowDown } from "react-icons/io";
 import convertPositionEngToKor from "@/lib/convertPositionEngToKor";
 export type Props = {
@@ -22,7 +22,6 @@ const SelectBox = ({
   className,
 }: Props) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-
   const ToggleHandler = () => {
     setIsOpen((prev) => !prev);
   };
@@ -62,4 +61,4 @@ const SelectBox = ({
   );
 };
 
-export default SelectBox;
+export default memo(SelectBox);

@@ -34,6 +34,15 @@ export default function Comment({ projectId }: Props) {
         queryKey: ["get", "comments", projectId],
       });
     },
+    onError() {
+      alert("로그인이 필요합니다.");
+      setComment("");
+    },
+    onSettled() {
+      if (commentRef.current) {
+        commentRef.current.value = "";
+      }
+    },
   });
 
   const onAddComment: MouseEventHandler<HTMLButtonElement> = (e) => {
@@ -42,7 +51,7 @@ export default function Comment({ projectId }: Props) {
   };
 
   return (
-    <div className="flex flex-col gap-[30px]">
+    <div className="mt-[170px] flex flex-col gap-[50px]">
       <CommentList projectId={projectId} />
       <div className="max-w-5xl rounded-lg border bg-white p-4 shadow-sm">
         <textarea
