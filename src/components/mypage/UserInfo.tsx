@@ -407,6 +407,7 @@ export default function UserInfo({ user }: Props) {
               <li className="flex flex-wrap gap-2">
                 {techStack?.split(",").map((stack) => (
                   <button
+                    key={uuidv4()}
                     type="button"
                     className="w-fit rounded-xl border border-neutral-gray-50 px-2 py-1 text-sm"
                     onClick={() => {
