@@ -9,7 +9,7 @@ import {
 
 type Props = {
   params: {
-    userId: number;
+    userId: string;
   };
 };
 export default async function PeopleDetailPage({ params }: Props) {
@@ -18,7 +18,7 @@ export default async function PeopleDetailPage({ params }: Props) {
   const queryClient = new QueryClient();
 
   await queryClient.prefetchQuery({
-    queryKey: ["get", "peoplesDetail", userId],
+    queryKey: ["get", "peoplesDetail", String(userId)],
     queryFn: getPeopleDetail,
   });
   const dehydratedState = dehydrate(queryClient);

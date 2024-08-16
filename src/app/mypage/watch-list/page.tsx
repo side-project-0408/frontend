@@ -13,13 +13,13 @@ export default function WatchListPage() {
   return (
     <div className="flex flex-col gap-10 ">
       <div className="flex justify-center gap-[30px]">
-        {tabMenu.map((tab, index) => (
+        {tabMenu.map((tab) => (
           <Button
             key={tab.id}
             onClickHandler={() => setSelectTab(tab.id)}
             className={`w-[200px] border-b px-2 py-1 ${tab.id === selectTab ? "text-neutral-orange-500" : "text-neutral-black-800"}`}
           >
-            {tab.tabMenu}
+            <div>{tab.tabMenu}</div>
           </Button>
         ))}
       </div>

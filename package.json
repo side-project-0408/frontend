@@ -1,5 +1,5 @@
 {
-  "name": "my-app",
+  "name": "match-mate",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -7,18 +7,23 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "mock": "npx tsx watch ./src/mocks/http.ts"
+    "mock": "npx tsx watch ./src/mocks/http.ts",
+    "bundle": "ANALYZE=true yarn build"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.35.1",
+    "@types/react-select": "^5.0.1",
     "cookies-next": "^4.2.1",
     "next": "14.2.3",
     "react": "^18",
     "react-datepicker": "^7.1.0",
     "react-dom": "^18",
-    "react-select": "^5.8.0"
+    "react-select": "^5.8.0",
+    "uuid": "^10.0.0",
+    "zustand": "^4.5.4"
   },
   "devDependencies": {
+    "@babel/core": "^7.24.7",
     "@mswjs/http-middleware": "^0.10.1",
     "@tanstack/react-query-devtools": "^5.35.1",
     "@types/cors": "^2.8.17",
@@ -26,6 +31,7 @@
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@types/uuid": "^10.0.0",
     "cors": "^2.8.5",
     "eslint": "^8",
     "eslint-config-next": "14.2.3",
