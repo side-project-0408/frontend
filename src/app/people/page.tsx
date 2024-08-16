@@ -103,14 +103,14 @@ export default function PeoplePage({ searchParams }: Props) {
             changeSearchParams("sort", "RECENT");
           }}
         >
-          최신순
+          <p>최신순</p>
         </Button>
         <Button
           onClick={() => {
             changeSearchParams("sort", "POPULAR");
           }}
         >
-          인기순
+          <p>인기순</p>
         </Button>
       </div>
       <Peoples searchParams={searchParams} />
