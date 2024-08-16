@@ -4,7 +4,6 @@ import Image from "next/image";
 import {
   FormEvent,
   FormEventHandler,
-  useCallback,
   useEffect,
   useRef,
   useState,
@@ -23,7 +22,12 @@ import GetOffer from "./GetOffer";
 import dynamic from "next/dynamic";
 import { MultiValue } from "react-select";
 import { blurLogoUrl } from "../../../public/blurLogoUrl";
+import { v4 as uuidv4 } from "uuid";
 
+const SKILLS = [
+  { id: 1, softSkill: "항상 노력합니다." },
+  { id: 2, softSkill: "시간이 여유롭습니다." },
+];
 type Props = {
   user: GetUserData;
 };
@@ -45,13 +49,9 @@ export default function UserInfo({ user }: Props) {
   const [errorMessage, setErrorMessage] = useState(false);
   const [emailCode, setEmailCode] = useState(false);
   const {
-    alarmStatus,
     content,
-    employmentStatus,
     nickname,
     userFileUrl,
-    favoriteCount,
-    viewCount,
     softSkill,
     techStack,
     links,
@@ -64,7 +64,7 @@ export default function UserInfo({ user }: Props) {
 
   const [product, setProduct] = useState<GetUserData>(user ?? {});
 
-  const { data, refetch: refetchNicknameCheck } = useQuery({
+  const { refetch: refetchNicknameCheck } = useQuery({
     queryKey: [
       "get",
       "nicknameCheck",
@@ -85,19 +85,6 @@ export default function UserInfo({ user }: Props) {
       setDupliCheck(false);
     }
   };
-
-  const handleTechStackChange = useCallback(
-    (newValue: MultiValue<{ label: string; value: string }>) => {
-      setProduct((prev) => ({
-        ...prev,
-        techStack: newValue.map((opt) => opt.value).join(","),
-      }));
-    },
-    [product.techStack],
-  );
-  useEffect(() => {
-    console.log("handleTextStackchage 렌더링 되었습니다.");
-  }, [handleTechStackChange]);
 
   const defaultValues = techStack?.split(",").map((item) => ({
     label: item === "jsc" ? "javascript" : item,
@@ -136,13 +123,6 @@ export default function UserInfo({ user }: Props) {
   useEffect(() => {
     setProduct(user ?? {});
   }, [user]);
-
-  const toggleOffer = useCallback(() => {
-    setProduct((prev) => ({
-      ...prev,
-      alarmStatus: !prev.alarmStatus,
-    }));
-  }, [product.alarmStatus]);
 
   const mutation = useMutation({
     mutationFn: async (e: FormEvent) => {
@@ -190,7 +170,9 @@ export default function UserInfo({ user }: Props) {
 
   const handleSubmit: FormEventHandler = (e) => {
     e.preventDefault();
-    if (!product.position || !product.techStack || !product.softSkill) {
+    const softSkill = product.softSkill.split(",").length < 3;
+    console.log("softSkill length", softSkill);
+    if (!product.position || !product.techStack || softSkill) {
       setErrorMessage(true);
     } else if (product.nickname !== nickname && !dupliCheck) {
       alert("닉네임 중복 체크가 필요합니다.");
@@ -199,10 +181,32 @@ export default function UserInfo({ user }: Props) {
     }
   };
 
-  const handleLinkChange = (newLinks: string[]) => {
+  const handleSoftSkills = (techStacks: string) => {
+    const existSkills = product.softSkill.includes(techStacks);
+    const limitedSoftSkills = product.softSkill.split(",").length >= 3;
+    if (existSkills) {
+      alert("이미 적용된 소프트 스킬 입니다.");
+    } else if (limitedSoftSkills) {
+      alert("소프트 스킬은 최대 3개까지 적용할수 있습니다.");
+      return;
+    } else {
+      setProduct((prev) => ({
+        ...prev,
+        softSkill: prev.softSkill
+          ? prev.softSkill.split(",").concat(techStacks).join(",")
+          : techStacks!!,
+      }));
+      softSkillRef.current!.value = "";
+    }
+  };
+
+  const handleProductValueChange = <T extends string | boolean>(
+    name: string,
+    value: T,
+  ) => {
     setProduct((prev) => ({
       ...prev,
-      links: newLinks.join(","),
+      [name]: value,
     }));
   };
 
@@ -219,7 +223,10 @@ export default function UserInfo({ user }: Props) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="mx-auto flex w-fit flex-col gap-7">
+    <form
+      onSubmit={handleSubmit}
+      className="mx-auto flex w-[400px] flex-col gap-7"
+    >
       <div className="relative flex flex-col items-center gap-2">
         <input
           type="file"
@@ -301,12 +308,9 @@ export default function UserInfo({ user }: Props) {
           options={SELECT_POSITION_OPTION}
           optSelected={product.position}
           title={position ? position : "포지션을 선택해 보세요!"}
-          onClick={useCallback(
-            (value) => {
-              setProduct((prev) => ({ ...prev, position: value }));
-            },
-            [product.position],
-          )}
+          onClick={(value) => {
+            handleProductValueChange("position", value);
+          }}
           width={400}
           height={50}
           className="rounded-md"
@@ -317,12 +321,9 @@ export default function UserInfo({ user }: Props) {
           경력
         </label>
         <SelectBox
-          onClick={useCallback(
-            (value) => {
-              setProduct((prev) => ({ ...prev, year: value }));
-            },
-            [product.year],
-          )}
+          onClick={(value) => {
+            handleProductValueChange("year", value);
+          }}
           options={YEAR_OPTION}
           title={year}
           optSelected={product.year}
@@ -345,7 +346,7 @@ export default function UserInfo({ user }: Props) {
               checked={product.employmentStatus === true}
               className="radio-custom"
               onChange={() => {
-                setProduct((prev) => ({ ...prev, employmentStatus: true }));
+                handleProductValueChange("employmentStatus", true);
               }}
             />
           </div>
@@ -358,7 +359,7 @@ export default function UserInfo({ user }: Props) {
               checked={product.employmentStatus === false}
               className="radio-custom"
               onChange={() => {
-                setProduct((prev) => ({ ...prev, employmentStatus: false }));
+                handleProductValueChange("employmentStatus", false);
               }}
             />
           </div>
@@ -371,55 +372,86 @@ export default function UserInfo({ user }: Props) {
         <MultiSelectBox
           defaultValues={defaultValues}
           selectKey={selectKey}
-          multiSelectHandler={handleTechStackChange}
+          multiSelectHandler={(
+            newValue: MultiValue<{ label: string; value: string }>,
+          ) => {
+            handleProductValueChange(
+              "techStack",
+              newValue.map((opt) => opt.value).join(","),
+            );
+          }}
         />
       </div>
       <div className="flex flex-col gap-2">
         <label htmlFor="" className="text-sm font-bold">
           소프트 스킬
         </label>
-        <div className="flex flex-col gap-2">
-          {product.softSkill?.split(",").map((skill, i) => (
-            <div key={`skill${i}`}>
-              <div className="flex w-fit items-center gap-2 rounded-xl border bg-neutral-gray-50 px-2 py-1">
+        <div className="flex flex-col">
+          <div className="flex flex-col gap-3 border-b-[1px] pb-[20px]">
+            <p className="text-sm font-semibold">간단하게 추가해 보세요.</p>
+            <ul className="flex flex-wrap gap-2">
+              <li className="flex flex-wrap gap-2">
+                {SKILLS.map((skill) => (
+                  <button
+                    key={skill.id}
+                    className="w-fit rounded-xl border border-neutral-gray-50 px-2 py-1 text-sm"
+                    type="button"
+                    onClick={() => {
+                      handleSoftSkills(skill.softSkill);
+                    }}
+                  >
+                    {skill.softSkill}
+                  </button>
+                ))}
+              </li>
+              <li className="flex flex-wrap gap-2">
+                {techStack?.split(",").map((stack) => (
+                  <button
+                    type="button"
+                    className="w-fit rounded-xl border border-neutral-gray-50 px-2 py-1 text-sm"
+                    onClick={() => {
+                      const techStacks = `저는 ${stack} 에 자신있어요 !`;
+                      handleSoftSkills(techStacks);
+                    }}
+                  >{`저는 ${stack} 에 자신있어요 !`}</button>
+                ))}
+              </li>
+            </ul>
+          </div>
+          <div className="flex flex-col gap-2 pt-[20px]">
+            {product.softSkill?.split(",").map((skill, i) => (
+              <div
+                key={uuidv4()}
+                className="flex w-fit items-center gap-2 rounded-xl border bg-neutral-gray-50 px-2 py-1"
+              >
                 <p className="text-sm">{skill}</p>
                 <IoMdCloseCircle
+                  className="cursor-pointer"
                   onClick={() => {
-                    setProduct((prev) => ({
-                      ...prev,
-                      softSkill: product.softSkill
-                        .split(",")
-                        .filter((opt) => opt !== skill)
-                        .join(","),
-                    }));
+                    const filterSoftSkill = product.softSkill
+                      .split(",")
+                      .filter((opt) => opt !== skill)
+                      .join(",");
+                    handleProductValueChange("softSkill", filterSoftSkill);
                   }}
                 />
               </div>
+            ))}
+            <div className="relative">
+              <input
+                type="text"
+                className="h-[50px] w-full rounded-xl border bg-neutral-gray-50 pl-[8px] placeholder:text-sm"
+                placeholder="소프트 스킬을 수정해 보세요."
+                ref={softSkillRef}
+              />
+              <FaCirclePlus
+                onClick={() => {
+                  const techStacks = softSkillRef.current?.value;
+                  handleSoftSkills(techStacks as string);
+                }}
+                className="absolute right-[10px] top-[16px]"
+              />
             </div>
-          ))}
-          <div className="relative">
-            <input
-              type="text"
-              className="h-[50px] w-full rounded-xl border bg-neutral-gray-50 pl-[8px] placeholder:text-sm"
-              placeholder="소프트 스킬을 수정해 보세요."
-              ref={softSkillRef}
-            />
-            <FaCirclePlus
-              onClick={() => {
-                const inputValue = softSkillRef.current?.value;
-                setProduct((prev) => ({
-                  ...prev,
-                  softSkill: prev.softSkill
-                    ? prev.softSkill
-                        .split(",")
-                        .concat(inputValue as string)
-                        .join(",")
-                    : inputValue!!,
-                }));
-                softSkillRef.current!.value = "";
-              }}
-              className="absolute right-[10px] top-[16px]"
-            />
           </div>
         </div>
       </div>
@@ -438,9 +470,19 @@ export default function UserInfo({ user }: Props) {
         <label htmlFor="link" className="text-sm font-bold">
           링크
         </label>
-        <AddInput linkUrls={links} setLink={handleLinkChange} />
+        <AddInput
+          linkUrls={links}
+          setLink={(newLinks: string[]) => {
+            handleProductValueChange("links", newLinks.join(","));
+          }}
+        />
       </div>
-      <GetOffer alarmStatus={product.alarmStatus} offerHandler={toggleOffer} />
+      <GetOffer
+        alarmStatus={product.alarmStatus}
+        offerHandler={() => {
+          handleProductValueChange("alarmStatus", !product.alarmStatus);
+        }}
+      />
       {errorMessage && (
         <p className="text-[red]">기술스택 직무 소프트스킬은 필수값입니다.</p>
       )}
