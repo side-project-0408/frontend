@@ -1,16 +1,17 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { MouseEventHandler } from "react";
+import { MouseEventHandler, ReactElement } from "react";
 import { IoArrowBack } from "react-icons/io5";
 
 interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  children?: string;
+  children?: React.ReactNode;
   inValid?: boolean;
   className?: string;
   size?: "large" | "medium";
   back?: boolean;
   onClickHandler?: () => void;
+  orangeBtn?: boolean;
 }
 export default function Button({
   children,
@@ -18,6 +19,7 @@ export default function Button({
   inValid = false,
   size = "large",
   back = false,
+  orangeBtn = false,
   onClickHandler,
   ...props
 }: Props) {
@@ -30,7 +32,7 @@ export default function Button({
   return (
     <button
       disabled={inValid}
-      className={`${inValid && "bg-neutral-gray-50"} items-center ${className}`}
+      className={`h-[58px] ${inValid && "bg-neutral-gray-50"} ${orangeBtn && "bg-neutral-orange-500 text-neutral-white-0"} ${size === "large" && "w-full"} ${size === "medium" && "w-[100px]"} ${className}`}
       onClick={back ? onClickBack : onClickHandler}
       {...props}
     >
@@ -39,7 +41,7 @@ export default function Button({
           <IoArrowBack />
         </div>
       ) : (
-        <p className="text-center font-bold">{children}</p>
+        <>{children}</>
       )}
     </button>
   );
