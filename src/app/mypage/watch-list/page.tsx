@@ -19,7 +19,7 @@ export default function WatchListPage() {
             onClickHandler={() => setSelectTab(tab.id)}
             className={`w-[200px] border-b px-2 py-1 ${tab.id === selectTab ? "text-neutral-orange-500" : "text-neutral-black-800"}`}
           >
-            <p>{tab.tabMenu}</p>
+            <div>{tab.tabMenu}</div>
           </Button>
         ))}
       </div>

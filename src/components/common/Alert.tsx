@@ -13,7 +13,7 @@ export default function Alert() {
         onClick={() => router.push("/")}
         className="h-[30px] w-[150px] rounded-md"
       >
-        <p className="font-semibold">확인</p>
+        <div>확인</div>
       </Button>
     </div>
   );
