@@ -24,10 +24,14 @@ export default function PeopleLike({ className, userId }: Props) {
     queryFn: getLikePeoples,
   });
 
-  const liked = likeQuery?.data.some((item) => item.userId === userId);
+  const likedDataExist = likeQuery?.data ?? [];
+  const liked = likedDataExist.some((item) => item.userId === userId);
 
   const like = useMutation({
     mutationFn: (userId: number) => {
+      if (!access_token) {
+        throw new Error("access token x");
+      }
       return fetch(
         `${process.env.NEXT_PUBLIC_BASE_URL}/users/favorite?favoriteId=${userId}`,
         {
@@ -40,15 +44,20 @@ export default function PeopleLike({ className, userId }: Props) {
       );
     },
     onSuccess() {
+      // queryClient.invalidateQueries({
+      //   queryKey: ["get", "likepeoples"],
+      // });
+      // queryClient.invalidateQueries({
+      //   queryKey: ["get", "hotpeoples"],
+      // });
+      queryClient.invalidateQueries({
+        queryKey: ["get"],
+      });
       alert("찜하기 성공");
     },
-    onError() {
+    onError(err) {
+      console.log("error", err);
       alert("people 찜하기는 로그인이 필요합니다 !");
-    },
-    onSettled(data, error, variables, context) {
-      queryClient.invalidateQueries({
-        queryKey: ["get", "likepeoples"],
-      });
     },
   });
 
@@ -66,8 +75,14 @@ export default function PeopleLike({ className, userId }: Props) {
       );
     },
     onSuccess() {
+      // queryClient.invalidateQueries({
+      //   queryKey: ["get", "likepeoples"],
+      // });
+      // queryClient.invalidateQueries({
+      //   queryKey: ["get", "hotpeoples"],
+      // });
       queryClient.invalidateQueries({
-        queryKey: ["get", "likepeoples"],
+        queryKey: ["get"],
       });
       alert("찜하기 삭제 완료");
     },
