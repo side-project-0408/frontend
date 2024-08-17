@@ -16,7 +16,7 @@ export default function HotPeople() {
   //   "hotpeoples",
   // ]);
 
-  const { data: hotPeopleData } = useQuery<GetPeoples, Error, GetPeoples>({
+  const { data: hotPeopleData } = useQuery<GetPeoples, Error>({
     queryKey: ["get", "hotpeoples"],
     queryFn: hotPeopls,
   });
