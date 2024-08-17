@@ -5,7 +5,12 @@ import PeopleContentBox from "./PeopleContentBox";
 import hotPeopls from "@/lib/people/hotPeoples";
 
 export default function HotPeople() {
-  const { data: hotPeopleData } = useQuery<GetPeoples, Error>({
+  const { data: hotPeopleData } = useQuery<
+    GetPeoples,
+    Error,
+    GetPeoples,
+    [_1: string, _2: string]
+  >({
     queryKey: ["get", "hotpeoples"],
     queryFn: hotPeopls,
   });
