@@ -24,8 +24,7 @@ export default function PeopleLike({ className, userId }: Props) {
     queryFn: getLikePeoples,
   });
 
-  const likedDataExist = likeQuery?.data ?? [];
-  const liked = likedDataExist.some((item) => item.userId === userId);
+  const liked = likeQuery?.data.some((item) => item.userId === userId) ?? false;
 
   const like = useMutation({
     mutationFn: (userId: number) => {

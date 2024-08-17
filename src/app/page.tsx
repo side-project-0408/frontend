@@ -11,6 +11,7 @@ import NoDataAlert from "@/components/common/NoDataAlert";
 
 const HotPeople = dynamic(() => import("@/components/people/HotPeople"), {
   loading: () => <Loading />,
+  ssr: false,
 });
 
 export default async function Home() {
