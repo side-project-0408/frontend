@@ -46,7 +46,12 @@ export default function ProjectDetailPageContents({ projectId }: Props) {
       {isEditable ? (
         <ProjectDetailEdit detailedProject={detailedProjectResp?.data} />
       ) : (
-        <ProjectDetailView detailedProject={detailedProjectResp?.data} />
+        <>
+          <ProjectDetailView
+            detailedProject={detailedProjectResp?.data}
+            projectId={projectId}
+          />
+        </>
       )}
     </>
   );
