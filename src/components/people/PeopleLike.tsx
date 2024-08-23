@@ -22,9 +22,9 @@ export default function PeopleLike({ className, userId }: Props) {
   >({
     queryKey: ["get", "likepeoples"],
     queryFn: getLikePeoples,
+    enabled: !!access_token,
   });
-
-  const liked = likeQuery?.data?.some((item) => item.userId === userId);
+  const liked = !!likeQuery?.data?.find((item) => item.userId === userId);
 
   const like = useMutation({
     mutationFn: (userId: number) => {

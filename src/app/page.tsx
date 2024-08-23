@@ -8,11 +8,7 @@ import Banner from "@/components/common/Banner";
 import dynamic from "next/dynamic";
 import Loading from "@/components/common/Loading";
 import NoDataAlert from "@/components/common/NoDataAlert";
-
-const HotPeople = dynamic(() => import("@/components/people/HotPeople"), {
-  loading: () => <Loading />,
-  ssr: false,
-});
+import HotPeople from "@/components/people/HotPeople";
 
 export default async function Home() {
   const queryClient = new QueryClient();
