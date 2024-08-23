@@ -12,12 +12,17 @@ import { MouseEventHandler } from "react";
 
 import heartIcon from "../../../public/image/heart.svg";
 import fillHeartIcon from "../../../public/image/fillHeart.svg";
+import Comment from "./Comment";
 
 type Prop = {
   detailedProject: IProjectDetailData | undefined;
+  projectId: string;
 };
 
-export default function ProjectDetailView({ detailedProject }: Prop) {
+export default function ProjectDetailView({
+  detailedProject,
+  projectId,
+}: Prop) {
   const access_token = getCookie("access_token") as string;
 
   const queryClient = useQueryClient();
@@ -98,7 +103,7 @@ export default function ProjectDetailView({ detailedProject }: Prop) {
   if (!detailedProject) return <div>is fetching data...</div>;
 
   return (
-    <div>
+    <div className="max-w-5xl">
       <div className="text-[32px] font-bold">{detailedProject.title}</div>
       <section className="mt-[20px] flex items-center">
         <Image
@@ -170,20 +175,19 @@ export default function ProjectDetailView({ detailedProject }: Prop) {
         프로젝트 소개
       </div>
       <Image
-        className=""
+        className="rounded-md"
         src={
           detailedProject.projectFileUrl
             ? detailedProject.projectFileUrl
             : "/projectImageDefault.svg"
         }
         alt="This is project image"
-        width={741}
-        height={270}
+        width={500}
+        height={500}
       />
-      <div className="mt-[50px] max-w-[741px]">
-        {detailedProject.description}
-      </div>
-      <div className="flex max-w-[741px] justify-center">
+      <div className="mt-[50px]">{detailedProject.description}</div>
+      <Comment projectId={projectId} />
+      <div className="flex justify-center">
         <button
           onClick={onFavoriteProject}
           className="mt-[87px] flex h-[58px] w-[58px] flex-col items-center justify-center rounded-md border"
