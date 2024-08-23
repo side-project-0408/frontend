@@ -2,6 +2,7 @@
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { setCookie } from "cookies-next";
+import Loading from "@/components/common/Loading";
 
 export default function KakaoLogin() {
   const router = useRouter();
@@ -24,8 +25,8 @@ export default function KakaoLogin() {
   }, [router]);
 
   return (
-    <div>
-      <p>Logging in...</p>
-    </div>
+    <>
+      <Loading />
+    </>
   );
 }

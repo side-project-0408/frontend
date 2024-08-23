@@ -40,7 +40,7 @@ export default function Header() {
           </section>
           <section className="flex gap-2.5">
             <Link
-              href="/register"
+              href={accessToken ? "/register" : "/login"}
               className="rounded-2xl border border-transparent bg-neutral-orange-500 px-3 py-1 font-semibold text-neutral-white-0"
             >
               프로젝트 모집

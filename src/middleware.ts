@@ -51,5 +51,6 @@ export const config = {
     "/mypage/user-info",
     "/mypage/project-write",
     "/mypage/watch-list",
+    "/register",
   ],
 };
