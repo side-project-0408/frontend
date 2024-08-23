@@ -22,37 +22,6 @@ type Props = {
   };
 };
 
-const convertPositionEngToKor = (posEng: string) => {
-  let posKr = "";
-  switch (posEng) {
-    case "frontend":
-      posKr = "프론트엔드";
-      break;
-    case "backend":
-      posKr = "백엔드";
-      break;
-    case "designer":
-      posKr = "디자이너";
-      break;
-    case "pm":
-      posKr = "PM";
-      break;
-    case "ios":
-      posKr = "IOS";
-      break;
-    case "android":
-      posKr = "안드로이드";
-      break;
-    case "devops":
-      posKr = "데브옵스";
-      break;
-    default:
-      posKr = "None";
-      break;
-  }
-  return posKr;
-};
-
 export default function ProjectBox({ project }: Props) {
   let isRecent = project.recent;
   return (
@@ -66,12 +35,9 @@ export default function ProjectBox({ project }: Props) {
         className={`absolute top-0 ${isRecent ? "" : "hidden"}`}
       />
       <div className={`${isRecent ? "mt-[78px]" : "mt-[36px]"} flex gap-[1px]`}>
-        {project.position.split(", ").map((p, i) => (
+        {project.position.split(",").map((p, i) => (
           <div key={`position${i}`}>
-            <BlueTextBox
-              textToShow={convertPositionEngToKor(p)}
-              textSize={"12px"}
-            />
+            <BlueTextBox textToShow={p} textSize={"12px"} />
           </div>
         ))}
       </div>
@@ -82,7 +48,7 @@ export default function ProjectBox({ project }: Props) {
         {`마감일 | ${project.deadline.replaceAll("-", ".")}`}
       </div>
       <div className="mt-[16px] flex gap-[10px] overflow-hidden">
-        {project.techStack.split(", ").map((t, i) => (
+        {project.techStack.split(",").map((t, i) => (
           <TechStack key={`techStack${i}`} techStack={t} showText={false} />
         ))}
       </div>
