@@ -1,5 +1,9 @@
 "use client";
-import { useMutation } from "@tanstack/react-query";
+import {
+  QueryClient,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { deleteCookie, getCookie } from "cookies-next";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -7,6 +11,7 @@ import { useEffect } from "react";
 
 export default function Logout() {
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   const logout = useMutation({
     mutationFn: async (refreshToken: string) => {
@@ -27,6 +32,9 @@ export default function Logout() {
         deleteCookie("refresh_token");
       }
       router.push("/");
+      queryClient.invalidateQueries({
+        queryKey: ["get"],
+      });
     },
   });
 
