@@ -4,9 +4,7 @@ import { QueryFunction } from "@tanstack/query-core";
 export const hotPeopls: QueryFunction<
   GetPeoples,
   [_1: string, _2: string]
-> = async ({ queryKey }) => {
-  const [_1, _2] = queryKey;
-
+> = async () => {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_BASE_URL}/peoples/hot?size=8`,
     {
