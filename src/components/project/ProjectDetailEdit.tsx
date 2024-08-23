@@ -5,6 +5,7 @@ import {
   ChangeEvent,
   FormEvent,
   FormEventHandler,
+  useEffect,
   useRef,
   useState,
 } from "react";
@@ -14,13 +15,15 @@ import { GetUsers } from "@/model/userInfo";
 import getUserInfo from "@/lib/mypage/getUserInfo";
 import Select from "react-select";
 import makeAnimated from "react-select/animated";
+import { CiCirclePlus } from "react-icons/ci";
+import { CiCircleMinus } from "react-icons/ci";
 
 import Image from "next/image";
 
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import SelectBox from "../common/SelectBox";
-import { SELECT_POSITION_OPTION } from "@/constants";
+import { SELECT_OPTION, SELECT_POSITION_OPTION } from "@/constants";
 import { useRouter } from "next/navigation";
 
 type Prop = {
@@ -30,42 +33,8 @@ type Prop = {
 type ImageFile = File | null;
 type ProjectDate = Date | null;
 
-const option = [
-  { label: "React", value: "react" },
-  { label: "TypeScript", value: "typescript" },
-  { label: "JavaScript", value: "javascript" },
-  { label: "Vue", value: "vue" },
-  { label: "Svelte", value: "svelte" },
-  { label: "Nextjs", value: "nextjs" },
-  { label: "Java", value: "java" },
-  { label: "Spring", value: "spring" },
-  { label: "Nodejs", value: "nodejs" },
-  { label: "Nestjs", value: "nestjs" },
-  { label: "Go", value: "go" },
-  { label: "Kotlin", value: "kotlin" },
-  { label: "Express", value: "express" },
-  { label: "MySQL", value: "mysql" },
-  { label: "MongoDB", value: "mongodb" },
-  { label: "Python", value: "python" },
-  { label: "Diango", value: "Diango" },
-  { label: "php", value: "php" },
-  { label: "GraphQL", value: "graphql" },
-  { label: "Firebase", value: "firebase" },
-  { label: "Flutter", value: "flutter" },
-  { label: "Swift", value: "swift" },
-  { label: "Kotlin", value: "kotlin" },
-  { label: "ReactNative", value: "reactnative" },
-  { label: "Unity", value: "unity" },
-  { label: "AWS", value: "aws" },
-  { label: "Kubernetes", value: "kubernetes" },
-  { label: "Docker", value: "docker" },
-  { label: "Git", value: "git" },
-  { label: "Figma", value: "figma" },
-  { label: "Zeplin", value: "zeplin" },
-  { label: "Jest", value: "jest" },
-];
-
 export default function ProjectDetailEdit({ detailedProject }: Prop) {
+  const refFocus = useRef<HTMLInputElement>(null);
   const [projectName, setProjectName] = useState(
     detailedProject ? detailedProject.title : "",
   );
@@ -73,8 +42,11 @@ export default function ProjectDetailEdit({ detailedProject }: Prop) {
     detailedProject ? detailedProject.description : "",
   );
 
-  const [projectImage, setProjectImage] = useState<ImageFile>(null);
+  useEffect(() => {
+    refFocus.current?.focus();
+  }, []);
 
+  const [projectImage, setProjectImage] = useState<ImageFile>(null);
   const [projectDate, setProjectDate] = useState<ProjectDate>(new Date());
 
   const [items, setItems] = useState(
@@ -133,9 +105,7 @@ export default function ProjectDetailEdit({ detailedProject }: Prop) {
     index: number,
     countType: string,
     change: number,
-    e: React.MouseEvent<HTMLButtonElement>,
   ) => {
-    e.preventDefault();
     const newItems = [...items];
     if (newItems[index].position === "") {
       alert("포지션을 선택해주세요.");
@@ -288,13 +258,14 @@ export default function ProjectDetailEdit({ detailedProject }: Prop) {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="w-full max-w-[800px]">
       <input
+        ref={refFocus}
         type="text"
         name="projectName"
         value={projectName}
         onChange={(e) => handleNameChange(e)}
-        className="mt-[20px] h-[64px] w-[747px] rounded-md border border-[#C1C1C1] pl-[10px] text-[32px] font-semibold"
+        className="mt-[20px] h-[45px] w-full rounded-md border border-[#C1C1C1] pl-[10px] text-[25px] font-semibold"
         placeholder="프로젝트 제목을 입력해주세요."
       />
       <div className="mt-[20px] flex gap-[20px]">
@@ -322,12 +293,12 @@ export default function ProjectDetailEdit({ detailedProject }: Prop) {
         </div>
       </div>
       <div className="mb-[20px] mt-[40px] text-[22px] font-bold">모집 인원</div>
-      <div className="flex max-w-[900px] flex-wrap gap-[60px]">
+      <div className="flex max-w-[900px] flex-wrap gap-[30px]">
         {items.map((item, idx) => {
           return (
             <div
               key={`projectRecruit${idx}`}
-              className="flex justify-center gap-[20px]"
+              className="flex items-center justify-center gap-[20px]"
             >
               <SelectBox
                 options={SELECT_POSITION_OPTION}
@@ -341,34 +312,39 @@ export default function ProjectDetailEdit({ detailedProject }: Prop) {
                 className="rounded-md"
               />
               <div className="flex items-center gap-[10px] text-[18px] font-semibold">
+                <p>모집된 인원</p>
                 <button
-                  onClick={(e) => handleCountChange(idx, "current", -1, e)}
+                  onClick={() => handleCountChange(idx, "current", -1)}
+                  type="button"
                 >
-                  -
+                  <CiCircleMinus />
                 </button>
                 <span>{item.currentCount}</span>
                 <button
-                  onClick={(e) => handleCountChange(idx, "current", 1, e)}
+                  onClick={() => handleCountChange(idx, "current", 1)}
+                  type="button"
                 >
-                  +
+                  <CiCirclePlus />
                 </button>
-              </div>
-              <div className="flex items-center justify-center text-[18px] font-semibold">
-                <div>/</div>
               </div>
               <div className="flex items-center gap-[10px] text-[18px] font-semibold">
+                <p>최대 모집 인원</p>
                 <button
-                  onClick={(e) => handleCountChange(idx, "target", -1, e)}
+                  onClick={() => handleCountChange(idx, "target", -1)}
+                  type="button"
                 >
-                  -
+                  <CiCircleMinus />
                 </button>
                 <span>{item.targetCount}</span>
-                <button onClick={(e) => handleCountChange(idx, "target", 1, e)}>
-                  +
+                <button
+                  type="button"
+                  onClick={() => handleCountChange(idx, "target", 1)}
+                >
+                  <CiCirclePlus />
                 </button>
               </div>
               <button
-                className="my-auto ml-[10px] h-[40px] rounded-lg bg-gray-200 px-[5px] text-[16px] font-semibold"
+                className="h-[30px] w-[34px] rounded-lg bg-gray-200 text-[14px] font-semibold"
                 onClick={() => removeItem(idx)}
               >
                 삭제
@@ -392,7 +368,7 @@ export default function ProjectDetailEdit({ detailedProject }: Prop) {
             instanceId="techStack"
             // key={selectKey} // Force re-render by changing key
             defaultValue={initialTechStack}
-            options={option}
+            options={SELECT_OPTION}
             components={animatedComponents}
             isMulti
             onChange={(selectedOption) => {
@@ -419,19 +395,17 @@ export default function ProjectDetailEdit({ detailedProject }: Prop) {
       {!projectImage && !detailedProject ? (
         <div>아래 버튼을 통해 이미지를 입력해주세요.</div>
       ) : (
-        <div className="h-[100px] w-[100px]">
-          <Image
-            src={
-              projectImage
-                ? URL.createObjectURL(projectImage)
-                : (detailedProject?.projectFileUrl as string)
-            }
-            width={741}
-            height={270}
-            className=""
-            alt="프로젝트 소개 이미지"
-          />
-        </div>
+        <Image
+          src={
+            projectImage
+              ? URL.createObjectURL(projectImage)
+              : (detailedProject?.projectFileUrl as string)
+          }
+          width={500}
+          height={500}
+          className="rounded-md"
+          alt="프로젝트 소개 이미지"
+        />
       )}
       <button
         className="mt-[50px] flex h-[50px] items-center justify-center rounded-md bg-[#FF800B] px-[20px] text-[14px] font-normal text-white"
